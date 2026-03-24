@@ -1,0 +1,27 @@
+# [Project name]
+
+## Goal
+
+One paragraph, what + why.
+
+## State
+
+EXPLORING | EXPERIMENTING | WRITING | BLOCKED
+
+## TODOs
+
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Blocked
+
+Explicit escalations requiring user input.
+
+## Context
+
+Running log: findings, results, pivots (append-only).
+
+## History
+
+Compressed decisions + rationale (agent summarizes).
