@@ -1,18 +1,57 @@
-# Evolve Skill
+---
+name: evolve
+description: Use at session end to extract generalizable lessons from RESEARCH.md and git history and propose skill diffs without editing skills directly.
+---
 
-Runs at session end. Instructions:
+# Evolve
 
-1. Read RESEARCH.md History + git log for this session.
-2. Identify candidate lessons: things that failed, unexpected results, 
-   debugging insights, workflow improvements.
-3. Apply generalize filter: ask "would this lesson help in a different project 
-   on a different topic?" If no → discard. If yes → proceed.
-4. For each generalizable lesson: write a LESSON.md file using the template.
-   Save to lessons/YYYYMMDD-slug.md. Set Status: PROPOSED.
-5. For each lesson that affects a skill: propose a specific diff to that SKILL.md.
-   Write the proposed diff inline in the LESSON.md under ## Proposed diff.
-6. Print a session summary: TODOs completed, metrics moved, lessons extracted, 
-   diffs proposed.
-7. Tell the user: "Review proposed diffs in lessons/. Merge with: 
-   `git apply lessons/YYYYMMDD-slug.diff` or edit SKILL.md directly."
-8. Never write directly to SKILL.md. Always propose. Human merges.
+Run at session end. Extract generalizable lessons and propose skill improvements. Never edit skill files directly.
+
+## Inputs
+
+1. Read `RESEARCH.md` **History** section and the git log for this session (`git log --since="today" --oneline` or similar).
+
+## Identify Candidate Lessons
+
+2. Look for:
+   - Things that failed and why.
+   - Unexpected experiment results.
+   - Debugging insights that took significant effort.
+   - Workflow improvements discovered during the session.
+   - Decisions that were revisited or reversed.
+
+## Generalize Filter
+
+3. For each candidate, ask: *"Would this lesson help in a different project on a different topic?"*
+   - **No** → discard it. Project-specific learnings stay in `RESEARCH.md`, not in lessons.
+   - **Yes** → proceed to write a lesson file.
+
+## Write Lesson Files
+
+4. For each generalizable lesson, create a file at `lessons/YYYYMMDD-<slug>.md` using the `LESSON.md.template`. Fill in:
+   - **Trigger** — the specific situation that caused the lesson.
+   - **Lesson** — the generalizable rule, stated as an imperative.
+   - **Evidence** — the concrete example from this session.
+   - **Applies to** — which skill(s) this lesson affects (e.g., `experiment`, `research`).
+   - **Confidence** — `LOW`, `MED`, or `HIGH` based on how reproducible the evidence is.
+   - **Status** — always set to `PROPOSED`.
+
+5. If the lesson implies a change to a skill file, write the proposed diff under **## Proposed diff** in the lesson file. Use unified diff format. Create a corresponding `.diff` file at `lessons/YYYYMMDD-<slug>.diff` that can be applied with `git apply`.
+
+## Session Summary
+
+6. Print a summary:
+   ```
+   Session summary:
+   - TODOs completed: N
+   - Key metrics: <any metrics that moved>
+   - Lessons extracted: N
+   - Skill diffs proposed: N
+   ```
+
+7. Tell the user: *"Review proposed diffs in `lessons/`. Merge with `git apply lessons/YYYYMMDD-slug.diff` or edit the SKILL.md directly."*
+
+## Constraints
+
+8. Never write directly to any `SKILL.md` file. Always propose. The human merges.
+9. Create the `lessons/` directory if it does not exist.

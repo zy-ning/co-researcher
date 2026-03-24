@@ -6,13 +6,13 @@ One paragraph, what + why.
 
 ## State
 
-EXPLORING | EXPERIMENTING | WRITING | BLOCKED
+EXPLORING
 
 ## TODOs
 
-- [ ] Task 1
-- [ ] Task 2
-- [ ] Task 3
+- [ ] P0: Top priority task
+- [ ] P1: Next task
+- [ ] P2: Later task
 
 ## Blocked
 
@@ -20,8 +20,8 @@ Explicit escalations requiring user input.
 
 ## Context
 
-Running log: findings, results, pivots (append-only).
+- YYYY-MM-DD HH:MM — Finding, result, or pivot.
 
 ## History
 
-Compressed decisions + rationale (agent summarizes).
+- YYYY-MM-DD — Decision and rationale.

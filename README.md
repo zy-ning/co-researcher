@@ -5,9 +5,12 @@ A Claude Code skill pack for autonomous AI research assistance. No Python, no CL
 ## Install
 
 ```bash
-./install.sh          # project-local
-./install.sh --global # global
+git clone <repo-url> co-researcher
+cd co-researcher
+./install.sh
 ```
+
+Use `./install.sh --global` to install into `~/.claude/skills` instead.
 
 ## Start a new project
 
