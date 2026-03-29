@@ -8,6 +8,12 @@
 - Write back after each major action.
 - Prefer asking the user over guessing when state is ambiguous.
 
+## Session Recovery
+
+On new session or after context compaction:
+1. Read `RESEARCH.md` **Pipeline Status** section first (30-second orient).
+2. Resume from **Active TODO** — do not restart from scratch.
+
 ## Skills
 
 Skills in `skills/` are invoked by name:
@@ -17,6 +23,13 @@ Skills in `skills/` are invoked by name:
 - `review` — adversarial critique
 - `write` — paper drafting
 - `evolve` — extracts lessons
+
+## Invocation Graph
+
+- `research` → `experiment` / `run-experiment`, `write` / `paper-write`, `review` / `auto-review-loop`, `research-lit` / `arxiv`, `research-refine`, `experiment-plan`, `result-to-claim`, `paper-figure`, `evolve`
+- `write` → auto-invokes `review` after each draft
+- `review` → falls back to `auto-review-loop-llm` or `auto-review-loop-minimax` if Codex unavailable
+- `evolve` → reads only; no delegation
 
 ## Templates
 

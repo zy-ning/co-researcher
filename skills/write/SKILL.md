@@ -1,6 +1,6 @@
 ---
 name: write
-description: Use when drafting or revising a paper from RESEARCH.md, including cases where results are partial, missing, or still being validated.
+description: Drafts or revises a research paper from RESEARCH.md, producing paper.md and refs.bib. Use when starting a paper, continuing an existing draft, or revising after a review round. Works at any stage of the research lifecycle — marks ungrounded claims inline as [UNGROUNDED] and unverified citations as [UNVERIFIED] rather than silently omitting them. Follows a fixed sequence: outline → section drafts → self-consistency check → citation pass. Automatically invokes `review` after the draft completes. Trigger phrases: "write paper", "draft paper", "revise paper", "start writing".
 ---
 
 # Write
@@ -34,9 +34,10 @@ Draft the paper from `RESEARCH.md`. You can enter at any point in the research l
 
 ## Output
 
-5. Write two files to the project root:
+5. Default output is two files at the project root:
    - `paper.md` — the full draft in markdown.
    - `refs.bib` — BibTeX entries for all citations.
+   **Escape hatch**: If the project root already contains a `.tex` file, ask the user whether to write to that file instead of `paper.md`.
 
 ## Post-Draft
 
@@ -46,3 +47,8 @@ Draft the paper from `RESEARCH.md`. You can enter at any point in the research l
 ## Partial State
 
 8. Handle partial state gracefully. If the user says "write the paper" and you find an existing `paper.md`, ask whether to continue from it or start fresh.
+
+## Example
+
+Input: RESEARCH.md with 2 completed experiments; user says "write the paper".
+Output: paper.md (outline + 5 sections, 1 [UNGROUNDED] marker), refs.bib (8 entries, 1 [UNVERIFIED]), then auto-invokes `review`.

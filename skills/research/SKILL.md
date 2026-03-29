@@ -1,6 +1,6 @@
 ---
 name: research
-description: Use when coordinating an autonomous research project from RESEARCH.md, choosing the next unblocked task, and deciding between breadth-first and depth-first work.
+description: Autonomous research agent that reads RESEARCH.md, infers what's needed, dynamically adjusts TODOs, and delegates to the right skill. Use when starting a session, resuming work, or asking "what should I do next?". Proactively surfaces gaps (e.g., "experiments done but no paper started") and asks before acting. Knows the full skill ecosystem — literature, refinement, figures, review, writing. Trigger phrases: "start research", "continue project", "what's next?", "do research".
 ---
 
 # Research
@@ -9,41 +9,61 @@ Own `RESEARCH.md`. Use it as the ground truth for project state.
 
 ## Session Start
 
-1. Read `RESEARCH.md`. If it does not exist, offer to initialize it from `templates/RESEARCH.md.template` before continuing.
-2. Read the **State** and **TODOs** sections. Orient yourself.
+1. If `RESEARCH.md` does not exist, offer to initialize from `templates/RESEARCH.md.template` before continuing.
+2. Read **Pipeline Status** first (30-second orient), then the full document.
 
-## Main Loop
+## Assess Before Acting
 
-3. Pick the top unchecked TODO that is not blocked. Announce it in one line: `→ Working on: <TODO text>`.
-4. Execute the TODO:
-   - Needs an experiment → invoke the `experiment` skill.
-   - Needs a literature review or critique → invoke the `review` skill.
-   - Needs paper drafting → invoke the `write` skill.
-   - Anything else → do it directly with available tools.
-5. When the TODO is done:
-   - Check it off in **TODOs** (`- [x]`).
-   - Append a timestamped entry to **Context** describing the result.
-   - Update **State** if the project phase changed (e.g., EXPLORING → EXPERIMENTING).
-   - Save `RESEARCH.md`.
-6. Surface the result to the user briefly. Then loop back to step 3.
+3. Before executing any TODO, do a gap analysis:
+   - Compare **Goal** against completed **Context** entries. What's clearly missing?
+   - Surface any stale items in **Blocked** to the user immediately.
+   - Examples of gaps to catch: experiment done but no result analysis TODO; results analyzed but no paper TODO; paper drafted but no review TODO.
 
-## Blocking
+4. If the TODO list is stale or incomplete, propose adjustments in one message and wait for user confirmation:
+   - Add TODOs for obvious missing work.
+   - Remove or defer TODOs made obsolete by Context entries.
+   - Reorder by priority if circumstances changed.
 
-7. If you hit a decision or blocker you cannot resolve:
-   - Write it to the **Blocked** section with enough context for the user to decide.
-   - Stop and ask the user. Do not guess.
-8. Never silently pick a direction when two plausible options exist. Write the tradeoff to **Blocked** and ask.
+## Act
+
+5. Pick the highest-priority unblocked TODO. Announce: `→ Working on: <TODO text>`.
+
+6. Delegate to the right skill:
+
+   | Need | Skill |
+   |------|-------|
+   | Literature survey | `research-lit` or `arxiv` |
+   | Method / idea refinement | `research-refine` |
+   | Experiment planning | `experiment-plan` |
+   | Running experiments | `experiment` (this pack) or `run-experiment` |
+   | Result analysis | `result-to-claim` |
+   | Figures | `paper-figure` |
+   | Paper drafting | `write` (this pack) or `paper-write` |
+   | Review / critique | `review` (this pack) or `auto-review-loop` |
+   | Lesson extraction | `evolve` (this pack) |
+   | Unclear | Ask the user which skill fits, or do it directly. |
+
+7. When done: check off TODO (`- [x]`), append timestamped **Context** entry, update **State** if phase changed, update **Pipeline Status**, save `RESEARCH.md`.
+
+## Proactive Loop
+
+8. After each completed TODO, surface the result briefly, then:
+   - **Next action is obvious** → announce it and ask "Shall I continue?"
+   - **Ambiguous** → describe 2–3 options and ask which to pursue.
+
+9. Never silently pick a direction when two plausible paths exist. Write the tradeoff to **Blocked** and ask.
 
 ## BFS vs DFS
 
-9. **BFS** — Use when `State=EXPLORING` and multiple hypotheses are viable:
-   - Propose spawning up to 3 parallel git branches, one per hypothesis, each with a lightweight experiment.
-   - Wait for user approval before creating any branches.
-   - After experiments complete, write a comparison table to **Context** and recommend the best branch.
-10. **DFS** — Use when a direction is confirmed:
-    - Go deep. Commit each meaningful step.
-    - Before risky moves, run `git stash` to create a checkpoint. Note the stash in **Context**.
+10. **BFS** (State=EXPLORING, multiple hypotheses viable): delegate branch creation and comparison to `experiment`. Wait for user approval before creating branches.
+11. **DFS** (direction confirmed): commit each meaningful step; `git stash` before risky moves; note stash in **Context**.
 
 ## Tone
 
 Concise. No preamble. Show what you are doing, not what you are about to do.
+
+## Example
+
+Input: RESEARCH.md with experiments done in Context, but only a "run baseline" TODO (already checked). No write TODO.
+Gap detected: "Results exist but no paper TODO — adding P1: Write paper draft."
+Action: Proposes TODO addition, waits for confirmation, then invokes `result-to-claim` to validate claims before writing.

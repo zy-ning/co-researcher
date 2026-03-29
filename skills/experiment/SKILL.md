@@ -1,6 +1,6 @@
 ---
 name: experiment
-description: Use when running ML experiments with scripts, time budgets, logs, retries, or multiple hypotheses that may need branch-by-branch comparison.
+description: Runs a single ML experiment or a batch of competing hypotheses reproducibly. Use when executing a training script, debugging a failing run, comparing multiple model variants on parallel git branches, or any time experiment results need to be logged to RESEARCH.md. Enforces isolated virtual environments, a 5-minute time budget by default, and a one-patch/one-retry failure policy. Writes structured result blocks (date, script hash, key metrics) back to RESEARCH.md Context. Trigger phrases: "run experiment", "train model", "test hypothesis", "compare variants".
 ---
 
 # Experiment
@@ -10,6 +10,7 @@ Run experiments reproducibly. Log what happened. Write results back to `RESEARCH
 ## Before Running
 
 1. Use an isolated virtual environment for every experiment run. If no venv exists, create one first.
+   **Escape hatch**: If the user has already activated a venv and explicitly says to use the current environment, skip this step.
 2. Validate that the target script parses cleanly before execution:
    ```bash
    python -m py_compile path/to/script.py
@@ -50,3 +51,9 @@ Run experiments reproducibly. Log what happened. Write results back to `RESEARCH
 12. Run the experiments sequentially or in background processes, whichever best fits the resource budget.
 13. Collect the results into a comparison table in `RESEARCH.md` **Context**.
 14. Recommend the best branch based on the logged metrics, not intuition.
+
+## Example
+
+Input: `python train.py --lr 0.01`, budget=5min.
+Success: Appends `2026-03-29 14:32 — val_acc=0.923, loss=0.21, hash=abc1234` to RESEARCH.md Context.
+Failure: Patches once, retries once, then surfaces error and stops.

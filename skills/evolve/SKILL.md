@@ -1,6 +1,6 @@
 ---
 name: evolve
-description: Use at session end to extract generalizable lessons from RESEARCH.md and git history and propose skill diffs without editing skills directly.
+description: Extracts generalizable lessons from a completed research session and proposes improvements to skill files. Use at session end, after the final `experiment` or `write` run. Reads RESEARCH.md History and git log, filters out project-specific observations, and writes lessons/YYYYMMDD-slug.md files with a proposed unified diff for any affected SKILL.md. Never edits SKILL.md directly — the human merges with `git apply`. Outputs a session summary (TODOs completed, lessons extracted, skill diffs proposed). Trigger phrases: "end session", "extract lessons", "what did we learn", "improve skills".
 ---
 
 # Evolve
@@ -9,7 +9,7 @@ Run at session end. Extract generalizable lessons and propose skill improvements
 
 ## Inputs
 
-1. Read `RESEARCH.md` **History** section and the git log for this session (`git log --since="today" --oneline` or similar).
+1. Read `RESEARCH.md` **History** section and the git log for this session (`git log --since="24 hours ago" --oneline`).
 
 ## Identify Candidate Lessons
 
@@ -55,3 +55,8 @@ Run at session end. Extract generalizable lessons and propose skill improvements
 
 8. Never write directly to any `SKILL.md` file. Always propose. The human merges.
 9. Create the `lessons/` directory if it does not exist.
+
+## Example
+
+Input: Session with 4 completed TODOs; 1 experiment failed due to unset random seed.
+Output: `lessons/20260329-seed-reproducibility.md` (Confidence=HIGH, Applies to=experiment) + matching `.diff` proposing `numpy.random.seed(42)` before every run.

@@ -1,6 +1,6 @@
 ---
 name: review
-description: Use when critiquing a research draft, result summary, or paper with a separate model and checking evidence, citations, and ablation support.
+description: Runs an adversarial critique of a research draft or paper using the Codex MCP server as an external critic model. Use when a paper draft is complete or partially complete, after each writing round, or when `write` invokes it automatically. Checks verifiable claims against RESEARCH.md, validates citations via DOI/arXiv lookup, and scores novelty and clarity. Returns a structured JSON score (0–10) with top weaknesses and a PROCEED/REFINE/PIVOT recommendation. Caps at 4 rounds per session. Trigger phrases: "review paper", "critique draft", "check citations", "adversarial review".
 ---
 
 # Review
@@ -9,8 +9,12 @@ Run an adversarial review with a **different** model. Never review your own work
 
 ## Critic Selection
 
-1. Use the Codex MCP server (`mcp__codex__codex`) as the critic model. It must be a different model from you.
-2. If Codex MCP is unavailable or not configured, say so and **stop**. Do not fall back to self-review.
+1. Use the first available external critic in priority order:
+   - `codex:codex` (Codex MCP) — preferred
+   - `auto-review-loop-llm` skill (any OpenAI-compatible endpoint) — fallback
+   - `auto-review-loop-minimax` skill (MiniMax) — fallback
+2. Record which critic was used in `RESEARCH.md` **Context** alongside the score.
+3. If no external critic is available, say so and **stop**. Do not self-review.
 
 ## Review Rubric (Fixed — Do Not Modify)
 
@@ -26,23 +30,18 @@ Run an adversarial review with a **different** model. Never review your own work
 - Novelty relative to cited work (1–5)
 - Writing quality (1–5)
 
-4. The critic must return a structured result:
-   ```json
-   {
-     "score": "X/10",
-     "verifiable_failures": ["..."],
-     "subjective": { "clarity": N, "novelty": N, "writing": N },
-     "top_3_weaknesses": ["..."],
-     "recommended_action": "PROCEED | REFINE | PIVOT"
-   }
-   ```
+4. The critic must return a structured result matching the schema in `RUBRIC.md`. See `RUBRIC.md` for field definitions, the PROCEED/REFINE/PIVOT decision rules, and the verbatim integrity instruction to include in every critic prompt.
 
 ## Integrity Checks
 
 5. If the score rises between rounds without corresponding verifiable improvements (new experiments, fixed citations), flag it as **potential reward hacking**. Write a warning to `RESEARCH.md` **Context**.
-6. Include this instruction verbatim in every prompt to the critic: *"Do not hide weaknesses to game a positive score."*
 
 ## Limits
 
-7. Run at most **4 review rounds** per session. After round 4, escalate to the user regardless of score.
-8. After each round, write the score and top weaknesses to `RESEARCH.md` **Context**.
+6. Run at most **4 review rounds** per session. After round 4, escalate to the user regardless of score.
+7. After each round, write the score and top weaknesses to `RESEARCH.md` **Context**.
+
+## Example
+
+Input: paper.md with 3 quantitative claims; 1 claim lacks a matching RESEARCH.md result.
+Output: score=6/10, verifiable_failures=["Table 2 improvement not in Context"], recommended_action=REFINE.
