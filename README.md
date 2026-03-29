@@ -1,4 +1,4 @@
-# co-researcher
+# Co-researcher
 
 A Claude Code skill pack for autonomous AI research assistance. No Python, no CLI wrappers — just markdown skills, shell scripts, and templates.
 
@@ -69,6 +69,18 @@ Edit the Goal, then run `/research` to kick off.
 4. **Loop** — after each result, surfaces what it found and asks "shall I continue?" or offers options
 
 On any new session or context compaction, the agent reads `## Pipeline Status` in `RESEARCH.md` first and resumes from where you left off.
+
+## BFS Mode (opt-in)
+
+Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch). When you want the agent to autonomously search for the best configuration, ask it to "explore the design space" or "autoresearch". The agent will confirm three things with you:
+
+- **Target file** — the single file it's allowed to modify (e.g., `train.py`)
+- **Metric** — a verifiable scalar to minimize or maximize, extractable from run output (e.g., `val_bpb`)
+- **Budget** — time per run (default 5 min) and max number of experiments
+
+Then `experiment` runs autonomously: design hypothesis → commit → run → extract metric → keep improvement or `git reset` → repeat. Every run (kept or discarded) is logged to `results.tsv`. When the batch finishes, a summary table lands in `RESEARCH.md` Context.
+
+This mode is **off by default** — only activates when you explicitly ask for it.
 
 ## Evolution loops
 

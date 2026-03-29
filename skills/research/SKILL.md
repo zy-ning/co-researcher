@@ -1,6 +1,6 @@
 ---
 name: research
-description: Autonomous research agent that reads RESEARCH.md, infers what's needed, dynamically adjusts TODOs, and delegates to the right skill. Use when starting a session, resuming work, or asking "what should I do next?". Proactively surfaces gaps (e.g., "experiments done but no paper started") and asks before acting. Knows the full skill ecosystem — literature, refinement, figures, review, writing. Trigger phrases: "start research", "continue project", "what's next?", "do research".
+description: Autonomous research agent that reads RESEARCH.md, infers what's needed, dynamically adjusts TODOs, and delegates to the right skill. Supports opt-in BFS mode: given a target file and a verifiable metric, autonomously runs batched hypothesis experiments (autoresearch-style) to find the best config. Proactively surfaces gaps and asks before acting. Trigger phrases: "start research", "continue project", "what's next?", "explore design space", "autoresearch".
 ---
 
 # Research
@@ -53,10 +53,20 @@ Own `RESEARCH.md`. Use it as the ground truth for project state.
 
 9. Never silently pick a direction when two plausible paths exist. Write the tradeoff to **Blocked** and ask.
 
-## BFS vs DFS
+## Exploration Modes
 
-10. **BFS** (State=EXPLORING, multiple hypotheses viable): delegate branch creation and comparison to `experiment`. Wait for user approval before creating branches.
-11. **DFS** (direction confirmed): commit each meaningful step; `git stash` before risky moves; note stash in **Context**.
+**BFS mode — opt-in, off by default**
+
+When the user asks to "explore the design space", "autoresearch", or "find the best config", activate BFS mode by delegating to `experiment` with BFS enabled. Before doing so, confirm with the user:
+- Which file can the agent modify? (target file)
+- What metric to optimize, and which direction? (e.g., minimize `val_bpb`)
+- Time budget per run and max number of experiments?
+
+Once confirmed, delegate to `experiment` BFS mode. It runs autonomously — do not interrupt. When it finishes, `experiment` returns a summary; update RESEARCH.md Context and Pipeline Status, then propose next step.
+
+**DFS — default when direction is confirmed**
+
+Commit each meaningful step. `git stash` before risky moves; note the stash in **Context**.
 
 ## Tone
 
