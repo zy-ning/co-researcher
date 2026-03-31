@@ -28,7 +28,7 @@ Skills in `skills/` are invoked by name:
 
 - `research` → `experiment` / `run-experiment`, `write` / `paper-write`, `review` / `auto-review-loop`, `research-lit` / `arxiv`, `research-refine`, `experiment-plan`, `result-to-claim`, `paper-figure`, `evolve`
 - `write` → auto-invokes `review` after each draft
-- `review` → falls back to `auto-review-loop-llm` or `auto-review-loop-minimax` if Codex unavailable
+- `review` → critic must run in isolated context (subagent, Codex MCP, or external API); falls back through `auto-review-loop-llm` → `auto-review-loop-minimax`
 - `evolve` → reads only; no delegation
 
 ## Templates

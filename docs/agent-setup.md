@@ -6,6 +6,14 @@ Follow these steps in order. Run each command, verify it succeeded before contin
 
 ## Step 1 — Install this pack
 
+Preferred (skills.sh CLI):
+
+```bash
+npx skills add zy-ning/co-researcher --all
+```
+
+Manual fallback:
+
 ```bash
 git clone <repo-url> oh-my-coresearcher
 cd oh-my-coresearcher

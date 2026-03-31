@@ -1,6 +1,13 @@
 ---
 name: experiment
-description: Runs ML experiments reproducibly — single runs or autonomous BFS batches. Single mode: isolated venv, time-budgeted, failure-handled, logs to RESEARCH.md. BFS mode (opt-in): agent designs N hypotheses, runs each for a fixed budget, compares via a single verifiable metric, keeps improvements and git-resets failures — fully autonomous until the batch completes. Trigger phrases: "run experiment", "train model", "explore design space", "find best config", "autoresearch mode".
+description: >-
+  Runs ML experiments reproducibly — single runs or autonomous BFS batches.
+  Single mode: isolated venv, time-budgeted, failure-handled, logs to
+  RESEARCH.md. BFS mode (opt-in): agent designs N hypotheses, runs each for a
+  fixed budget, compares via a single verifiable metric, keeps improvements and
+  git-resets failures — fully autonomous until the batch completes. Trigger
+  phrases: "run experiment", "train model", "explore design space", "find
+  best config", "autoresearch mode".
 ---
 
 # Experiment

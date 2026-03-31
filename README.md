@@ -2,13 +2,16 @@
 
 ![logo](assets/logo.png)
 
+[中文](README_CN.md) | [English](README.md)
+
 An extensible, self-improving Claude Code skill pack for autonomous ML research. Like oh-my-zsh but for research agents — five core skills, grow to fit your workflow.
 
-- **Markdown-only state.** `RESEARCH.md` is the single source of truth. No Python, no daemon. Any session resumes in 30 seconds.
-- **Inferring agent.** `research` spots gaps, adjusts the todo list, and asks before acting — not a fixed pipeline.
-- **Adversarial review.** External critic only (Codex → llm → minimax). Returns FATAL/MAJOR/MINOR issues + PROCEED/REFINE/PIVOT. Never self-reviews.
-- **BFS mode.** Opt-in autonomous design space search: hypothesize → commit → run → keep or `git reset` → repeat.
-- **Self-improving.** `evolve` proposes skill diffs from session lessons, or ingests external packs with compatibility checks. You merge.
+> - **Markdown-only state.** `RESEARCH.md` is the single source of truth. No Python, no daemon. Any session resumes in 30 seconds.
+> - **Inferring agent.** `research` spots gaps, adjusts the todo list, and asks before acting — not a fixed pipeline.
+> - **Adversarial review.** Critic runs in an isolated context. Returns FATAL/MAJOR/MINOR issues + PROCEED/REFINE/PIVOT.
+> - **BFS mode.** Opt-in autonomous design space search: hypothesize → commit → run → keep or `git reset` → repeat.
+> - **Self-improving.** `evolve` proposes skill diffs from session lessons, or ingests external packs with compatibility checks. You merge.
+> - **Compatible & Composable.** Use with any LLM agent framework. Pull in external skills from anywhere. Customize your stack.
 
 ---
 
@@ -19,11 +22,24 @@ Copy and paste this prompt to your LLM agent (Claude Code, Open Code, Codex, etc
 Install and configure "oh-my-coresearcher" skill pack following the instructions in https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/README.md and https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/docs/agent-setup.md.
 ```
 
+Quick install with skills.sh CLI:
+```bash
+npx skills add zy-ning/co-researcher --all
+```
+
 > **For agents** — fetch and follow [`docs/agent-setup.md`](docs/agent-setup.md) autonomously.
 > **For humans** — follow the steps below.
 
 
 ### 1. Install this pack
+
+Preferred (skills.sh):
+
+```bash
+npx skills add zy-ning/co-researcher --all
+```
+
+Manual fallback:
 
 ```bash
 git clone <repo-url> oh-my-coresearcher

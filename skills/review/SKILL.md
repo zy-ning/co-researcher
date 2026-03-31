@@ -1,20 +1,29 @@
 ---
 name: review
-description: Runs an adversarial critique of a research draft or paper using the Codex MCP server as an external critic model. Use when a paper draft is complete or partially complete, after each writing round, or when `write` invokes it automatically. Checks verifiable claims against RESEARCH.md, validates citations via DOI/arXiv lookup, and scores novelty and clarity. Returns a structured JSON score (0–10) with top weaknesses and a PROCEED/REFINE/PIVOT recommendation. Caps at 4 rounds per session. Trigger phrases: "review paper", "critique draft", "check citations", "adversarial review".
+description: >-
+  Adversarial critique of a research draft or paper using an isolated critic
+  context. The critic must have no access to the current conversation history —
+  context isolation, not model identity, is what makes the review independent.
+  Use when a draft is complete or partially complete, after each writing round,
+  or when `write` invokes it automatically. Returns FATAL/MAJOR/MINOR issues, a
+  structured score (0–10), and a PROCEED/REFINE/PIVOT recommendation. Caps at 4
+  rounds. Trigger phrases: "review paper", "critique draft", "check
+  citations", "adversarial review".
 ---
 
 # Review
 
-Run an adversarial review with a **different** model. Never review your own work.
+Run an adversarial review in an **isolated context**. The critic must have no access to the current conversation history — this is what makes the critique independent, not which model is used.
 
 ## Critic Selection
 
-1. Use the first available external critic in priority order:
-   - `codex:codex` (Codex MCP) — preferred
-   - `auto-review-loop-llm` skill (any OpenAI-compatible endpoint) — fallback
-   - `auto-review-loop-minimax` skill (MiniMax) — fallback
+1. Use the first available isolated critic in priority order:
+   - Claude subagent (via `Task` tool or similar) with a clean context — preferred when no external MCP is configured, same model is fine
+   - `codex:codex` (Codex MCP) — isolated by the MCP boundary
+   - `auto-review-loop-llm` skill (any OpenAI-compatible endpoint)
+   - `auto-review-loop-minimax` skill (MiniMax)
 2. Record which critic was used in `RESEARCH.md` **Context** alongside the score.
-3. If no external critic is available, say so and **stop**. Do not self-review.
+3. If no isolated context can be established, say so and **stop**. Do not review within the same conversation context.
 
 ## Review Rubric (Fixed — Do Not Modify)
 

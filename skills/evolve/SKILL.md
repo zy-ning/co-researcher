@@ -1,6 +1,14 @@
 ---
 name: evolve
-description: Two modes. Session mode (default): extracts generalizable lessons from RESEARCH.md and git history at session end, proposes skill diffs — human merges. Personalize mode: reads an external skill or skill pack, checks compatibility and scope overlap against installed skills, interviews the user to understand what they want and what to skip, then proposes a curated diff. Never edits SKILL.md directly. Trigger phrases: "end session", "extract lessons", "personalize my skills", "integrate this skill", "update skillpack".
+description: >-
+  Two modes. Session mode (default): extracts generalizable lessons from
+  RESEARCH.md and git history at session end, proposes skill diffs — human
+  merges. Personalize mode: reads an external skill or skill pack, checks
+  compatibility and scope overlap against installed skills, interviews the user
+  to understand what they want and what to skip, then proposes a curated diff.
+  Never edits SKILL.md directly. Trigger phrases: "end session", "extract
+  lessons", "personalize my skills", "integrate this skill", "update
+  skillpack".
 ---
 
 # Evolve

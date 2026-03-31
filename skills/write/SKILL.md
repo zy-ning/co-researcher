@@ -1,6 +1,14 @@
 ---
 name: write
-description: Drafts or revises a research paper from RESEARCH.md, producing paper.md and refs.bib. Use when starting a paper, continuing an existing draft, or revising after a review round. Works at any stage of the research lifecycle — marks ungrounded claims inline as [UNGROUNDED] and unverified citations as [UNVERIFIED] rather than silently omitting them. Follows a fixed sequence: outline → section drafts → self-consistency check → citation pass. Automatically invokes `review` after the draft completes. Trigger phrases: "write paper", "draft paper", "revise paper", "start writing".
+description: >-
+  Drafts or revises a research paper from RESEARCH.md, producing paper.md and
+  refs.bib. Use when starting a paper, continuing an existing draft, or
+  revising after a review round. Works at any stage of the research lifecycle —
+  marks ungrounded claims inline as [UNGROUNDED] and unverified citations as
+  [UNVERIFIED] rather than silently omitting them. Follows a fixed sequence:
+  outline → section drafts → self-consistency check → citation pass.
+  Automatically invokes `review` after the draft completes. Trigger phrases:
+  "write paper", "draft paper", "revise paper", "start writing".
 ---
 
 # Write
