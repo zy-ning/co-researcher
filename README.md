@@ -2,72 +2,81 @@
 
 ![logo](assets/logo.png)
 
-An extensible, self-improving Claude Code skill pack for autonomous ML research. Like oh-my-zsh but for research agents — start with the core five skills, then use `evolve` to personalize the pack to your workflow.
+An extensible, self-improving Claude Code skill pack for autonomous ML research. Like oh-my-zsh but for research agents — five core skills, grow to fit your workflow.
 
-## Install
+- **Markdown-only state.** `RESEARCH.md` is the single source of truth. No Python, no daemon. Any session resumes in 30 seconds.
+- **Inferring agent.** `research` spots gaps, adjusts the todo list, and asks before acting — not a fixed pipeline.
+- **Adversarial review.** External critic only (Codex → llm → minimax). Returns FATAL/MAJOR/MINOR issues + PROCEED/REFINE/PIVOT. Never self-reviews.
+- **BFS mode.** Opt-in autonomous design space search: hypothesize → commit → run → keep or `git reset` → repeat.
+- **Self-improving.** `evolve` proposes skill diffs from session lessons, or ingests external packs with compatibility checks. You merge.
+
+---
+
+## Installation and  Setup
+
+Copy and paste this prompt to your LLM agent (Claude Code, Open Code, Codex, etc.):
+```
+Install and configure "oh-my-coresearcher" skill pack following the instructions in https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/README.md and https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/docs/agent-setup.md.
+```
+
+> **For agents** — fetch and follow [`docs/agent-setup.md`](docs/agent-setup.md) autonomously.
+> **For humans** — follow the steps below.
+
+
+### 1. Install this pack
 
 ```bash
 git clone <repo-url> oh-my-coresearcher
 cd oh-my-coresearcher
-./install.sh          # project-local
-./install.sh --global # or into ~/.claude/skills
+./install.sh          # project-local (.claude/skills/)
+./install.sh --global # or globally (~/.claude/skills/)
 ```
 
-## Dependencies
-
-### ARIS skill pack (required)
-
-oh-my-coresearcher delegates to skills from [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep):
+### 2. ARIS skill pack (required)
 
 ```bash
-curl -fsSL https://feynman.is/install-skills | bash -s -- --repo
+git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git
+cp -r Auto-claude-code-research-in-sleep/skills/* ~/.claude/skills/
 ```
 
-| Skill | Used by | Purpose |
-|-------|---------|---------|
-| `research-lit` / `arxiv` | `research` | Literature survey |
-| `research-refine` | `research` | Method / idea refinement |
-| `experiment-plan` | `research` | Experiment blueprint |
-| `run-experiment` | `research` | Remote / GPU experiment execution |
-| `result-to-claim` | `research` | Validate what results actually support |
-| `paper-figure` | `research` | Generate publication figures |
-| `paper-write` | `research` | Full LaTeX paper drafting |
-| `auto-review-loop` | `research`, `review` | Multi-round automated review |
-| `auto-review-loop-llm` | `review` | Fallback reviewer (OpenAI-compatible) |
-| `auto-review-loop-minimax` | `review` | Fallback reviewer (MiniMax) |
+Provides: `research-lit`, `arxiv`, `research-refine`, `experiment-plan`, `run-experiment`, `result-to-claim`, `paper-figure`, `paper-write`, `auto-review-loop`, `auto-review-loop-llm`, `auto-review-loop-minimax`.
 
-### Feynman skill pack (optional, recommended)
+### 3. Codex MCP (required for `review`)
 
-Adds paper Q&A and reproducibility auditing via [Feynman](https://github.com/getcompanion-ai/feynman):
+```bash
+npm install -g @openai/codex
+codex setup                          # set model to gpt-5.4 when prompted
+claude mcp add codex -s user -- codex mcp-server
+```
+
+Fallback: `auto-review-loop-llm` (set `LLM_API_BASE` + `LLM_API_KEY`) or `auto-review-loop-minimax` (set `MINIMAX_API_KEY`).
+
+### 4. Feynman skill pack (optional)
 
 ```bash
 curl -fsSL https://feynman.is/install-skills | bash
+feynman alpha login   # authenticate AlphaXiv once
 ```
 
-| Skill / Tool | Used by | Purpose |
-|-------------|---------|---------|
-| `alpha-research` | `research` | Deep paper Q&A and linked code repo discovery |
-| `audit` | `research` | Compare paper claims against public codebase implementations |
+Provides: `alpha-research` (paper Q&A, `alpha ask/fetch/repo`), `audit` (paper-to-code reproducibility check).
 
-**AlphaXiv CLI** — required by `alpha-research`. After installing Feynman:
+### 5. LaTeX (optional, for PDF output)
 
 ```bash
-feynman alpha login   # authenticate once
-alpha search "<query>"         # semantic paper search
-alpha ask "<question>" <id>    # Q&A on a specific paper
-alpha fetch <arxiv-id>         # retrieve full paper
-alpha repo <arxiv-id>          # find linked code repository
+brew install --cask mactex && brew install poppler        # macOS
+sudo apt install texlive-full latexmk poppler-utils       # Ubuntu
 ```
 
-### MCP servers
+### More skill packs
 
-`review` uses an external critic. Configure at least one:
+Use `evolve` (personalize mode) to selectively pull skills from any of these:
 
-| MCP server | Config key | Notes |
-|------------|------------|-------|
-| Codex MCP | `codex` | Preferred critic |
-| llm-chat MCP | any OpenAI-compatible endpoint | Fallback via `auto-review-loop-llm` |
-| MiniMax MCP | `minimax` | Fallback via `auto-review-loop-minimax` |
+| Pack | What it adds |
+|------|-------------|
+| [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) | Core research pipeline (required above) |
+| [Feynman](https://github.com/getcompanion-ai/feynman) | AlphaXiv paper Q&A, audit, deep research |
+| [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | 9-stage pipeline, SLURM/GPU orchestration, Feishu notifications |
+| [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | 23-stage pipeline, anti-fabrication registry, self-healing experiment loop |
 
 ## Start a new project
 
