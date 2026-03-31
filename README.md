@@ -102,11 +102,38 @@ cp templates/RESEARCH.md.template RESEARCH.md
 
 Edit the Goal, then run `/research` to kick off.
 
+## Supervision control
+
+Use `/supervision` to configure how much autonomy the agent should use for the current project.
+
+The flow is preset-first, override-second:
+
+1. choose a preset: `manual`, `checkpointed`, `autonomous`, or `wild`
+2. adjust notification events if needed
+3. adjust approval gates if needed
+4. choose stop target / limits
+5. configure resource rules
+6. configure idea-change rules
+7. save the policy into `RESEARCH.md` if you want it to persist
+
+The policy lives in `RESEARCH.md` under `## Supervision Policy` so it stays human-readable and survives session recovery.
+
+Key capabilities:
+
+- queued approvals in `checkpointed` mode so the agent can continue unrelated allowed work
+- resource classes for **Service / API**, **Compute**, and **Human / Physical** resources
+- explicit control over whether idea improvements, strategy pivots, or compromises should notify or require approval
+- optional `wild` mode for non-stop execution until completion criteria or a hard boundary is reached
+
+Backward compatibility: if `## Supervision Policy` is absent, the current confirmation-first behavior remains unchanged.
+
+For full details, see [`docs/supervision-system.md`](docs/supervision-system.md).
+
 ## Core skills
 
 | Skill | When to use |
 |-------|-------------|
-| `research` | Main agent. Reads RESEARCH.md, infers gaps, adjusts TODOs, delegates to the right skill, proactively asks before acting. |
+| `research` | Main agent. Reads RESEARCH.md, infers gaps, adjusts TODOs, delegates to the right skill, and can follow a configurable supervision policy for notifications, approvals, stop targets, resource boundaries, and idea changes. |
 | `experiment` | Runs ML experiments: isolated venv, time-budgeted, failure-handled. Supports BFS mode for autonomous design space search. |
 | `review` | Adversarial critique with FATAL/MAJOR/MINOR severity. Falls back through Codex → llm → minimax. |
 | `write` | Paper drafting grounded in RESEARCH.md results. Marks `[UNGROUNDED]` and `[UNVERIFIED]` inline. |
@@ -123,6 +150,8 @@ Edit the Goal, then run `/research` to kick off.
 
 On any new session or context compaction, the agent reads `## Pipeline Status` in `RESEARCH.md` first and resumes in ~30 seconds.
 
+If `RESEARCH.md` also includes `## Supervision Policy`, `research` uses it to decide whether to pause for approval, queue an approval and continue unrelated work, notify and continue, request bounded resources, or stop at a configured target. No policy section means the legacy behavior stays in place.
+
 ## BFS Mode (opt-in)
 
 Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch). Ask the agent to "explore the design space" or "autoresearch". It confirms:
@@ -133,7 +162,7 @@ Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch). A
 
 Then `experiment` runs autonomously: design hypothesis → commit → run → extract metric → keep or `git reset` → repeat. Every run logged to `results.tsv`. Summary table lands in `RESEARCH.md` Context when done.
 
-Off by default — only activates when you explicitly ask.
+Off by default — only activates when you explicitly ask. Even under `wild`, BFS still respects explicit resource rules, safety boundaries, and completion criteria.
 
 ## Personalizing the skill pack
 

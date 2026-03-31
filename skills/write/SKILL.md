@@ -7,19 +7,25 @@ description: >-
   marks ungrounded claims inline as [UNGROUNDED] and unverified citations as
   [UNVERIFIED] rather than silently omitting them. Follows a fixed sequence:
   outline → section drafts → self-consistency check → citation pass.
-  Automatically invokes `review` after the draft completes. Trigger phrases:
-  "write paper", "draft paper", "revise paper", "start writing".
+  Automatically invokes `review` after the draft completes. If `RESEARCH.md`
+  includes a supervision policy, respect it at major writing gates. Trigger
+  phrases: "write paper", "draft paper", "revise paper", "start writing".
 ---
 
 # Write
 
 Draft the paper from `RESEARCH.md`. You can enter at any point in the research lifecycle.
 
+If `RESEARCH.md` includes `## Supervision Policy`, use it at major gates such as `write-start`, draft completion, revision decisions, and material idea changes in the paper plan. If the policy is absent, preserve the current behavior in this skill.
+
 ## Prerequisites
 
 1. Read `RESEARCH.md`. Check whether **Context** contains experiment results.
    - If results exist → use them as the empirical basis for the paper.
    - If no results → tell the user and ask: proceed with a results-free draft, or wait for experiments?
+   - If `Approve` includes `write-start`, pause for approval before drafting.
+   - If `Notify` includes `write-start` but approval does not, announce the start of drafting and continue.
+   - If writing requires a compromise or significant strategy pivot relative to the current plan, apply `Idea Changes` before proceeding.
 
 ## Drafting Order
 
@@ -50,7 +56,7 @@ Draft the paper from `RESEARCH.md`. You can enter at any point in the research l
 ## Post-Draft
 
 6. After completing the draft, invoke the `review` skill automatically. Write the review score to `RESEARCH.md` **Context**.
-7. Ask the user: "Review score is X/10. Want a revision pass?" If yes, address the top weaknesses and re-invoke `review`.
+7. If `Stop` says to halt after the draft or first review, stop with reason `target_reached` after recording the result. If the preset is `wild` and completion criteria are still unmet, continue the revision loop within policy boundaries. Otherwise ask the user: "Review score is X/10. Want a revision pass?" If yes, address the top weaknesses and re-invoke `review`.
 
 ## Partial State
 
