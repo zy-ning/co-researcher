@@ -2,14 +2,14 @@
 
 ![logo](assets/logo.png)
 
-一个可扩展、自我进化的 Claude Code 技能包，专为自主 ML 研究设计。就像 oh-my-zsh 之于 shell——从五个核心技能出发，通过 `evolve` 将技能包个性化为你自己的工作流。
+一个可扩展、自我进化的 Agent 技能包，专为自主 ML 研究设计。就像 oh-my-zsh 之于 shell——从五个核心技能出发，通过 `evolve` 将技能包个性化为你自己的工作流。
 
 ## 安装
 
 使用 skills.sh CLI 一键安装：
 
 ```bash
-npx skills add zy-ning/co-researcher --all
+npx skills add zy-ning/co-researcher
 ```
 
 > **AI 代理** — 自主获取并遵循 [`docs/agent-setup.md`](docs/agent-setup.md)。
@@ -20,7 +20,7 @@ npx skills add zy-ning/co-researcher --all
 推荐方式（skills.sh）：
 
 ```bash
-npx skills add zy-ning/co-researcher --all
+npx skills add zy-ning/co-researcher
 ```
 
 手动安装（备用）：

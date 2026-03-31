@@ -4,7 +4,9 @@
 
 [中文](README_CN.md) | [English](README.md)
 
-An extensible, self-improving Claude Code skill pack for autonomous ML research. Like oh-my-zsh but for research agents — five core skills, grow to fit your workflow.
+An extensible, self-improving Agent skill pack for autonomous ML research. Like oh-my-zsh but for research agents — five core skills, grow to fit your workflow.
+
+A co-researcher, **fully yours**:
 
 > - **Markdown-only state.** `RESEARCH.md` is the single source of truth. No Python, no daemon. Any session resumes in 30 seconds.
 > - **Inferring agent.** `research` spots gaps, adjusts the todo list, and asks before acting — not a fixed pipeline.
@@ -24,7 +26,7 @@ Install and configure "oh-my-coresearcher" skill pack following the instructions
 
 Quick install with skills.sh CLI:
 ```bash
-npx skills add zy-ning/co-researcher --all
+npx skills add zy-ning/co-researcher
 ```
 
 > **For agents** — fetch and follow [`docs/agent-setup.md`](docs/agent-setup.md) autonomously.
@@ -36,7 +38,7 @@ npx skills add zy-ning/co-researcher --all
 Preferred (skills.sh):
 
 ```bash
-npx skills add zy-ning/co-researcher --all
+npx skills add zy-ning/co-researcher
 ```
 
 Manual fallback:
