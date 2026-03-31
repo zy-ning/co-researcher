@@ -33,6 +33,8 @@ Own `RESEARCH.md`. Use it as the ground truth for project state.
    | Need | Skill |
    |------|-------|
    | Literature survey | `research-lit` or `arxiv` |
+   | Deep paper Q&A / code repo discovery | `alpha-research` (AlphaXiv CLI: `alpha ask`, `alpha repo`) |
+   | Paper-to-code reproducibility audit | `audit` |
    | Method / idea refinement | `research-refine` |
    | Experiment planning | `experiment-plan` |
    | Running experiments | `experiment` (this pack) or `run-experiment` |

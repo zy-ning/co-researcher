@@ -1,4 +1,4 @@
-# co-researcher
+# oh-my-coresearcher
 
 ## Ground Truth
 
@@ -22,7 +22,7 @@ Skills in `skills/` are invoked by name:
 - `experiment` — runs ML experiments
 - `review` — adversarial critique
 - `write` — paper drafting
-- `evolve` — extracts lessons
+- `evolve` — extracts lessons and personalizes the skill pack
 
 ## Invocation Graph
 

@@ -1,20 +1,27 @@
-# Co-researcher
+<!-- # Oh My Co-Researcher -->
 
-A Claude Code skill pack for autonomous AI research assistance. No Python, no CLI wrappers — just markdown skills, shell scripts, and templates.
+![logo](assets/logo.png)
+
+An extensible, self-improving Claude Code skill pack for autonomous ML research. Like oh-my-zsh but for research agents — start with the core five skills, then use `evolve` to personalize the pack to your workflow.
 
 ## Install
 
 ```bash
-git clone <repo-url> co-researcher
-cd co-researcher
-./install.sh
+git clone <repo-url> oh-my-coresearcher
+cd oh-my-coresearcher
+./install.sh          # project-local
+./install.sh --global # or into ~/.claude/skills
 ```
-
-Use `./install.sh --global` to install into `~/.claude/skills` instead.
 
 ## Dependencies
 
-co-researcher's orchestrator delegates to skills from the [ARIS skill pack](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep). Install it first (or ensure the following skills are available in your `~/.claude/skills/`):
+### ARIS skill pack (required)
+
+oh-my-coresearcher delegates to skills from [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep):
+
+```bash
+curl -fsSL https://feynman.is/install-skills | bash -s -- --repo
+```
 
 | Skill | Used by | Purpose |
 |-------|---------|---------|
@@ -29,11 +36,32 @@ co-researcher's orchestrator delegates to skills from the [ARIS skill pack](http
 | `auto-review-loop-llm` | `review` | Fallback reviewer (OpenAI-compatible) |
 | `auto-review-loop-minimax` | `review` | Fallback reviewer (MiniMax) |
 
-The five core skills (`experiment`, `write`, `review`, `evolve`, and `research` itself) work standalone — the above extend what `research` can delegate to.
+### Feynman skill pack (optional, recommended)
+
+Adds paper Q&A and reproducibility auditing via [Feynman](https://github.com/getcompanion-ai/feynman):
+
+```bash
+curl -fsSL https://feynman.is/install-skills | bash
+```
+
+| Skill / Tool | Used by | Purpose |
+|-------------|---------|---------|
+| `alpha-research` | `research` | Deep paper Q&A and linked code repo discovery |
+| `audit` | `research` | Compare paper claims against public codebase implementations |
+
+**AlphaXiv CLI** — required by `alpha-research`. After installing Feynman:
+
+```bash
+feynman alpha login   # authenticate once
+alpha search "<query>"         # semantic paper search
+alpha ask "<question>" <id>    # Q&A on a specific paper
+alpha fetch <arxiv-id>         # retrieve full paper
+alpha repo <arxiv-id>          # find linked code repository
+```
 
 ### MCP servers
 
-`review` uses an external critic model. Configure at least one:
+`review` uses an external critic. Configure at least one:
 
 | MCP server | Config key | Notes |
 |------------|------------|-------|
@@ -49,52 +77,70 @@ cp templates/RESEARCH.md.template RESEARCH.md
 
 Edit the Goal, then run `/research` to kick off.
 
-## Skills
+## Core skills
 
 | Skill | When to use |
 |-------|-------------|
-| `research` | Main agent. Reads RESEARCH.md, infers gaps, adjusts TODOs, delegates to the right skill, and proactively asks before acting. |
-| `experiment` | Runs ML experiments in isolated venvs with time budgets and failure handling. |
-| `review` | Cross-model adversarial critique. Tries Codex → `auto-review-loop-llm` → `auto-review-loop-minimax` in order. |
+| `research` | Main agent. Reads RESEARCH.md, infers gaps, adjusts TODOs, delegates to the right skill, proactively asks before acting. |
+| `experiment` | Runs ML experiments: isolated venv, time-budgeted, failure-handled. Supports BFS mode for autonomous design space search. |
+| `review` | Adversarial critique with FATAL/MAJOR/MINOR severity. Falls back through Codex → llm → minimax. |
 | `write` | Paper drafting grounded in RESEARCH.md results. Marks `[UNGROUNDED]` and `[UNVERIFIED]` inline. |
-| `evolve` | Session-end lesson extraction with propose-only diffs to SKILL.md files. |
+| `evolve` | Session-end lesson extraction **and** skill pack personalization. Proposes diffs — human merges only. |
 
 ## How the agent loop works
 
-`research` is not a rigid pipeline — it's an agent that reads your project state and figures out what to do next:
+`research` reads your project state and figures out what to do next:
 
-1. **Assess** — compares Goal vs completed Context entries to find gaps ("experiments done but no paper TODO")
-2. **Propose** — adjusts the TODO list and waits for your confirmation before acting
+1. **Assess** — compares Goal vs Context to find gaps ("experiments done but no paper TODO")
+2. **Propose** — adjusts the TODO list and waits for confirmation before acting
 3. **Act** — picks the top TODO and delegates to the right skill from the full ecosystem
-4. **Loop** — after each result, surfaces what it found and asks "shall I continue?" or offers options
+4. **Loop** — surfaces the result and asks "shall I continue?" or offers options
 
-On any new session or context compaction, the agent reads `## Pipeline Status` in `RESEARCH.md` first and resumes from where you left off.
+On any new session or context compaction, the agent reads `## Pipeline Status` in `RESEARCH.md` first and resumes in ~30 seconds.
 
 ## BFS Mode (opt-in)
 
-Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch). When you want the agent to autonomously search for the best configuration, ask it to "explore the design space" or "autoresearch". The agent will confirm three things with you:
+Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch). Ask the agent to "explore the design space" or "autoresearch". It confirms:
 
-- **Target file** — the single file it's allowed to modify (e.g., `train.py`)
-- **Metric** — a verifiable scalar to minimize or maximize, extractable from run output (e.g., `val_bpb`)
-- **Budget** — time per run (default 5 min) and max number of experiments
+- **Target file** — the single file it can modify (e.g., `train.py`)
+- **Metric** — a verifiable scalar to optimize (e.g., minimize `val_bpb`)
+- **Budget** — time per run (default 5 min) and max experiments
 
-Then `experiment` runs autonomously: design hypothesis → commit → run → extract metric → keep improvement or `git reset` → repeat. Every run (kept or discarded) is logged to `results.tsv`. When the batch finishes, a summary table lands in `RESEARCH.md` Context.
+Then `experiment` runs autonomously: design hypothesis → commit → run → extract metric → keep or `git reset` → repeat. Every run logged to `results.tsv`. Summary table lands in `RESEARCH.md` Context when done.
 
-This mode is **off by default** — only activates when you explicitly ask for it.
+Off by default — only activates when you explicitly ask.
 
-## Evolution loops
+## Personalizing the skill pack
 
-**Research loop**: `research` picks a TODO → delegates to `experiment`/`write`/etc → updates `RESEARCH.md` → proposes next step → repeats.
+`evolve` has two modes:
 
-**Skill evolution loop**: `evolve` runs at session end, extracts generalizable lessons, writes `lessons/YYYYMMDD-slug.md` files with proposed diffs to SKILL.md files. Human reviews and merges manually — no auto-editing skills.
+**Session mode** — run at session end. Extracts generalizable lessons from RESEARCH.md History and git log, proposes diffs to affected SKILL.md files.
 
-## Updating skills
-
-Proposed diffs land in `lessons/`. Review them, then:
+**Personalize mode** — point it at any external skill or skill pack. It will:
+1. Read the target and inventory your installed skills
+2. Check compatibility (name conflicts, missing tools/MCP, behavioral conflicts)
+3. Detect scope overlap and show you the delta vs what you already have
+4. Interview you — asks all questions at once: what to replace/merge/skip, which dependencies you have, what you explicitly don't want
+5. Propose a curated diff incorporating only what you confirmed
 
 ```bash
-git apply lessons/YYYYMMDD-slug.diff
-# or edit SKILL.md directly
+/evolve                                     # session mode
+/evolve -- personalize feynman audit skill  # integrate one external skill
+/evolve -- personalize ~/.claude/skills/    # audit your entire installed pack
+```
+
+Diffs land in `lessons/`. Apply when satisfied:
+
+```bash
+git apply lessons/YYYYMMDD-personalize-slug.diff
 ```
 
 Skills are never auto-modified. Human merges only.
+
+## Evolution loops
+
+**Research loop**: `research` picks TODO → delegates → updates `RESEARCH.md` → proposes next step → repeats.
+
+**Skill evolution loop**: `evolve` (session) → `lessons/` → human review → `git apply` → better skills next session.
+
+**Personalization loop**: find a useful skill elsewhere → `evolve` (personalize) → curated diff → merge → your pack grows.
