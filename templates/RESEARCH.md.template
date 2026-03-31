@@ -8,6 +8,72 @@
 - **Next action**: Run `research` to start
 - **Blocked on**: —
 
+## Supervision Policy
+<!-- Optional. If omitted, current confirmation-first behavior remains unchanged. -->
+- **Preset**: checkpointed
+- **Persistence**: project
+
+### Notify
+
+- approval-required
+- failure
+- completion
+- improvement
+- strategy-pivot
+
+### Approve
+
+- todo-adjustments
+- bfs-start
+- write-start
+- compromises
+- risky-actions
+
+### Stop
+
+- **Target**: queue-and-continue
+- **Max steps**: —
+- **Max errors**: —
+- **Timeout minutes**: —
+
+### Pending Approvals
+
+- (record queued approvals here when allowed work can continue)
+
+### Resources
+
+- **Escalation beyond granted**: forbid
+
+#### Service / API
+
+- **Mode**: approve
+- **Allowed**: —
+- **Forbidden**: —
+
+#### Compute
+
+- **Mode**: approve
+- **Allowed**: —
+- **Forbidden**: —
+
+#### Human / Physical
+
+- **Mode**: approve
+- **Allowed**: —
+- **Forbidden**: —
+
+### Idea Changes
+
+- **Improvements**: notify
+- **Strategy pivots**: notify
+- **Compromises**: approve
+
+### Wild Mode
+
+- **Enabled**: no
+- **Requires explicit risk confirmation**: yes
+- **Completion criteria**: —
+
 ## Goal
 
 One paragraph, what + why.

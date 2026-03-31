@@ -97,17 +97,44 @@ cp templates/RESEARCH.md.template RESEARCH.md
 
 编辑 Goal 字段，然后运行 `/research` 启动。
 
+## 监督策略控制
+
+使用 `/supervision` 来配置当前项目中 Agent 的自动化/监督强度。
+
+交互流程遵循“先预设，后覆盖”：
+
+1. 选择预设：`manual`、`checkpointed`、`autonomous`、`wild`
+2. 按需调整通知事件
+3. 按需调整审批门槛
+4. 选择停止目标 / 限制条件
+5. 配置资源规则
+6. 配置想法变化规则
+7. 如需持久化，将策略写入 `RESEARCH.md`
+
+策略保存在 `RESEARCH.md` 的 `## Supervision Policy` 段落中，因此保持可读、可手工编辑，并能参与会话恢复。
+
+关键能力包括：
+
+- 在 `checkpointed` 模式下支持“排队审批”，让 agent 在等待审批时继续处理其他已允许的工作
+- 按 **Service / API**、**Compute**、**Human / Physical** 三类管理资源边界
+- 分别控制想法改进、策略转向、方案妥协时是通知用户还是请求审批
+- 提供可选的 `wild` 模式，在达到完成条件或硬边界前持续工作
+
+兼容性说明：如果不存在 `## Supervision Policy`，系统保持当前以确认优先的默认行为，不会破坏旧项目。
+
+完整说明见 [`docs/supervision-system.md`](docs/supervision-system.md)。
+
 ## 核心技能
 
 | 技能 | 使用时机 |
 |------|----------|
-| `research` | 主代理。读取 RESEARCH.md，推断缺口，调整 TODO，委派合适技能，行动前主动确认。 |
+| `research` | 主 agent。读取 RESEARCH.md，推断缺口，调整 TODO，委派合适技能，并可根据可配置的监督策略决定通知、审批、停止目标、资源边界与想法变化处理方式。 |
 | `experiment` | 运行 ML 实验：隔离虚拟环境、时间预算、异常处理。支持 BFS 模式进行自主设计空间搜索。 |
 | `review` | 对抗性评审，分 FATAL/MAJOR/MINOR 三级。依次回退：Codex → llm → minimax。 |
 | `write` | 以 RESEARCH.md 结果为基础撰写论文。内联标注 `[UNGROUNDED]` 和 `[UNVERIFIED]`。 |
 | `evolve` | 会话结束时提取经验教训**并**个性化技能包。提出差异补丁——仅由人类合并。 |
 
-## 代理循环原理
+## agent 循环原理
 
 `research` 读取项目状态，自主决定下一步：
 
@@ -116,7 +143,9 @@ cp templates/RESEARCH.md.template RESEARCH.md
 3. **执行** — 选取优先级最高的 TODO，委派给生态中合适的技能
 4. **循环** — 呈现结果并询问"是否继续？"或提供选项
 
-每次新会话或上下文压缩后，代理先读取 `RESEARCH.md` 中的 `## Pipeline Status`，约 30 秒内恢复工作状态。
+每次新会话或上下文压缩后，agent 先读取 `RESEARCH.md` 中的 `## Pipeline Status`，约 30 秒内恢复工作状态。
+
+如果 `RESEARCH.md` 中还包含 `## Supervision Policy`，`research` 会据此决定：需要审批后暂停、将审批排队后继续其他允许的工作、仅通知后继续、按资源边界请求帮助，或在达到目标时停止。若该段不存在，则保持现有行为。
 
 ## BFS 模式（手动开启）
 
@@ -128,7 +157,7 @@ cp templates/RESEARCH.md.template RESEARCH.md
 
 随后 `experiment` 自主运行：设计假设 → 提交 → 运行 → 提取指标 → 保留或 `git reset` → 重复。每次运行记录至 `results.tsv`，汇总表格完成后写入 `RESEARCH.md` Context。
 
-默认关闭——仅在明确要求时激活。
+默认关闭——仅在明确要求时激活。即使在 `wild` 模式下，BFS 仍然必须遵守显式资源规则、安全边界与完成条件。
 
 ## 个性化技能包
 
