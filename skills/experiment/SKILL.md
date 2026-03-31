@@ -1,22 +1,13 @@
 ---
 name: experiment
-description: >-
-  Runs ML experiments reproducibly — single runs or autonomous BFS batches.
-  Single mode: isolated venv, time-budgeted, failure-handled, logs to
-  RESEARCH.md. BFS mode (opt-in): agent designs N hypotheses, runs each for a
-  fixed budget, compares via a single verifiable metric, keeps improvements and
-  git-resets failures — fully autonomous until the batch completes. Trigger
-  phrases: "run experiment", "train model", "explore design space", "find
-  best config", "autoresearch mode". If `RESEARCH.md` includes a supervision
-  policy, respect its notifications, approvals, and stop limits without
-  weakening the core BFS guardrails.
+description: Runs ML experiments reproducibly — single runs or autonomous BFS batches. Single mode: isolated venv, time-budgeted, failure-handled, logs to RESEARCH.md. BFS mode (opt-in): designs N hypotheses, runs each for a fixed budget, compares via a single verifiable metric, keeps improvements and git-resets failures — fully autonomous until done. Respects the RESEARCH.md supervision policy for notifications, approvals, and stop limits. Trigger phrases: "run experiment", "train model", "explore design space", "find best config", "autoresearch".
 ---
 
 # Experiment
 
 Run experiments reproducibly. Log everything to `RESEARCH.md`.
 
-If `RESEARCH.md` includes `## Supervision Policy`, use it to decide which lifecycle events to notify, which launches require approval, which resource boundaries apply, and which stop limits are tighter than the defaults below. If no policy exists, preserve the current behavior in this skill.
+If `RESEARCH.md` includes `## Supervision Policy`, apply it for notifications, approvals, resource boundaries, and stop limits. If absent, preserve the defaults below.
 
 ## Before Running
 
@@ -41,7 +32,7 @@ Activate when the user asks to "explore", "autoresearch", or "find the best conf
 - A **single target file** the agent is allowed to modify (e.g., `train.py`).
 - A **verifiable scalar metric** to minimize or maximize (e.g., `val_bpb`, `val_acc`). Must be extractable from run output with a grep/awk one-liner.
 
-If supervision policy says to notify on `experiment-start`, announce the run or batch before starting. If it says to approve BFS launch, require that approval before entering the loop. If the preset is `checkpointed`, queued approvals may be recorded while unrelated allowed work continues. If the preset is `wild`, continue only within already granted resource and budget boundaries. If the policy is absent, preserve the current handoff behavior from `research`.
+Apply supervision policy: notify on `experiment-start` if configured; require approval before entering the loop if `bfs-start` is in `Approve`; in `wild`, proceed only within already granted resource and budget boundaries.
 
 **Loop** (runs autonomously until budget or N experiments exhausted):
 
@@ -60,14 +51,9 @@ If supervision policy says to notify on `experiment-start`, announce the run or 
     ```
 13. Loop to step 8. Do not pause to ask the user between iterations unless a configured stop target or hard limit has been reached, or a forbidden resource / approval boundary blocks further progress.
 
-**End of batch**: write a summary comparison table to `RESEARCH.md` Context. Surface the best commit and top 3 results. If supervision policy says to stop after the batch, stop with reason `target_reached`. If the preset is `wild` and completion criteria are still unmet, continue according to the broader plan without a fresh checkpoint. Otherwise ask the user: "Best result is `<hash>` with `<metric>=<value>`. Shall I continue exploring or proceed to writing?"
+**End of batch**: write a summary table to `RESEARCH.md` Context; surface best commit and top 3. Apply stop policy (`target_reached`) or wild continuation as configured, otherwise ask: "Best result is `<hash>` (`<metric>=<value>`). Continue exploring or proceed to writing?"
 
-**Constraints**:
-- Only modify the designated target file. `prepare.py` / eval code / metric extraction must stay read-only.
-- Each hypothesis is one focused change. Do not bundle multiple changes.
-- Log every run, including discards — the failure record is part of the research.
-- Never let a permissive supervision preset bypass target-file, metric, or budget requirements.
-- Never let a permissive supervision preset bypass forbidden resource classes or explicit escalation limits.
+**Constraints**: only modify the target file; one focused change per hypothesis; log every run including discards; supervision presets never override target-file, metric, budget, or resource boundaries.
 
 ## Example
 
