@@ -92,6 +92,19 @@ brew install --cask mactex && brew install poppler
 sudo apt install texlive-full latexmk poppler-utils
 ```
 
+### 更多技能包
+
+可通过 `evolve`（personalize 模式）按需从以下项目选择性引入技能：
+
+| 技能包 | 可提供内容 |
+|--------|------------|
+| [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) | 核心研究流水线（上方必需依赖） |
+| [Feynman](https://github.com/getcompanion-ai/feynman) | AlphaXiv 论文问答、审计、深度研究 |
+| [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | 9 阶段流程、SLURM/GPU 编排、Feishu 通知 |
+| [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | 23 阶段流程、反幻觉注册表、自愈实验循环 |
+| [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | Orchestra Research 提供的外部学术研究技能包 |
+| [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | 面向学术研究的可复用技能工作流 |
+
 ## 新建项目
 
 ```bash

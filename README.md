@@ -92,6 +92,8 @@ Use `evolve` (personalize mode) to selectively pull skills from any of these:
 | [Feynman](https://github.com/getcompanion-ai/feynman) | AlphaXiv paper Q&A, audit, deep research |
 | [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | 9-stage pipeline, SLURM/GPU orchestration, Feishu notifications |
 | [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | 23-stage pipeline, anti-fabrication registry, self-healing experiment loop |
+| [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | External academic research skill pack from Orchestra Research |
+| [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | Academic research-oriented skill pack with reusable workflows |
 
 ## Start a new project
 
