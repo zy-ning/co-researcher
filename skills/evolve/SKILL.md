@@ -1,19 +1,23 @@
 ---
 name: evolve
 description: >-
-  Two modes. Session mode (default): extracts generalizable lessons from
-  RESEARCH.md and git history at session end, proposes skill diffs — human
-  merges. Personalize mode: reads an external skill or skill pack, checks
-  compatibility and scope overlap against installed skills, interviews the user
-  to understand what they want and what to skip, then proposes a curated diff.
-  Never edits SKILL.md directly. Trigger phrases: "end session", "extract
-  lessons", "personalize my skills", "integrate this skill", "update
-  skillpack".
+  Three modes. Session mode (default): extracts generalizable lessons from
+  RESEARCH.md and git history at session end; lessons that imply a new or
+  significantly changed skill are handed off to skill-creator. Personalize
+  mode: searches the skills registry via `npx skills find`, reads the target
+  skill(s), checks compatibility and scope overlap against installed skills,
+  interviews the user to understand what they want and what to skip, then
+  creates or improves skills using skill-creator. Create mode: designs a brand-
+  new skill from scratch using skill-creator. Never edits SKILL.md directly —
+  all changes go through skill-creator's draft→test→iterate loop, human merges.
+  Trigger phrases: "end session", "extract lessons", "personalize my skills",
+  "integrate this skill", "update skillpack", "find a skill for", "create a
+  skill", "improve skill".
 ---
 
 # Evolve
 
-Two modes: **Session** (run at session end) and **Personalize** (integrate external skills). Never edit skill files directly.
+Three modes: **Session** (run at session end), **Personalize** (discover and integrate external skills), **Create** (build a new skill from scratch). Skill creation and significant rewrites always go through `skill-creator` — never write to SKILL.md directly.
 
 ---
 
@@ -37,7 +41,9 @@ Two modes: **Session** (run at session end) and **Personalize** (integrate exter
 
 4. Create `lessons/YYYYMMDD-<slug>.md` using `LESSON.md.template`. Fill in: Trigger, Lesson, Evidence, Applies to, Confidence (LOW/MED/HIGH), Status (PROPOSED).
 
-5. If the lesson implies a skill change, write a unified diff under `## Proposed diff` and a matching `lessons/YYYYMMDD-<slug>.diff`.
+5. If the lesson implies a skill change, classify it:
+   - **Minor tweak** (wording, one extra step, edge case) → write a unified diff under `## Proposed diff` and a matching `lessons/YYYYMMDD-<slug>.diff`.
+   - **New skill or significant rewrite** → hand off to `skill-creator`: describe the intent, provide the lesson as context, and follow its draft→test→iterate loop. The resulting SKILL.md lands in `lessons/` as a proposal — never installed directly.
 
 ### Session Summary
 
@@ -55,30 +61,38 @@ Two modes: **Session** (run at session end) and **Personalize** (integrate exter
 
 ## Mode 2 — Personalize
 
-Activate when the user says "personalize", "integrate this skill", or provides an external SKILL.md path or URL.
+Activate when the user says "personalize", "integrate this skill", "find a skill for", or provides an external SKILL.md path or URL.
+
+### Step 0 — Discover (if no target provided)
+
+8. If the user gives a description rather than a path/URL, search the registry:
+   ```bash
+   npx skills find "<query>"
+   ```
+   Present the top results (name, description, install command) and ask the user which to integrate. Then continue with the chosen skill(s).
 
 ### Step 1 — Read external skill(s)
 
-8. Read the target: a single SKILL.md, a skills directory, or a skill pack repo. Extract:
+9. Read the target: a single SKILL.md, a skills directory, or a skill pack repo. Extract:
    - Name, description, trigger phrases
    - Tools, MCP servers, and external dependencies it references
    - Behavioral patterns (workflows, delegation, output files)
 
 ### Step 2 — Inventory installed skills
 
-9. Read all SKILL.md files in `~/.claude/skills/` (or the project `.claude/skills/`). Build a map of:
-   - Names and descriptions
-   - Tools and MCP servers already in use
-   - Overlapping trigger phrases
+10. Read all SKILL.md files in `~/.claude/skills/` (or the project `.claude/skills/`). Build a map of:
+    - Names and descriptions
+    - Tools and MCP servers already in use
+    - Overlapping trigger phrases
 
 ### Step 3 — Analyze
 
-10. For each external skill, assess three dimensions:
+11. For each external skill, assess three dimensions:
 
     **Compatibility** — will it conflict?
     - Name collision with an installed skill?
     - References a tool/MCP not configured (e.g., `alpha login` not done)?
-    - Contradicts a behavioral rule in an existing skill (e.g., different self-review policy)?
+    - Contradicts a behavioral rule in an existing skill?
 
     **Scope overlap** — does it duplicate something?
     - Substantially the same as an installed skill → flag as overlap, note the delta
@@ -89,30 +103,33 @@ Activate when the user says "personalize", "integrate this skill", or provides a
 
 ### Step 4 — Interview the user
 
-11. Ask targeted questions based on the analysis. Ask all at once, not one-by-one:
+12. Ask targeted questions based on the analysis. Ask all at once, not one-by-one:
 
-    For each **overlap** found:
-    > "`<external>` overlaps with your `<installed>`. It differs in: `<delta>`. Replace, merge, or skip?"
+    For each **overlap**: > "`<external>` overlaps with your `<installed>`. It differs in: `<delta>`. Replace, merge, or skip?"
 
-    For each **missing dependency**:
-    > "`<external>` requires `<tool/MCP>`. Do you have it configured? If not, should I skip the parts that need it?"
+    For each **missing dependency**: > "`<external>` requires `<tool/MCP>`. Do you have it? If not, skip those parts?"
 
-    For each **behavioral conflict**:
-    > "`<external>` does `<X>` but your `<installed>` does `<Y>`. Which do you prefer?"
+    For each **behavioral conflict**: > "`<external>` does `<X>` but your `<installed>` does `<Y>`. Which do you prefer?"
 
-    Open question at the end:
-    > "Is there anything from this skill you explicitly don't want?"
+    Open: > "Anything from this skill you explicitly don't want?"
 
-### Step 5 — Propose curated diff
+### Step 5 — Create or improve via skill-creator
 
-12. Based on user answers, generate a diff that:
-    - Incorporates only the confirmed additions
-    - Skips the parts the user rejected or that have unresolved dependencies
-    - Preserves existing behavior unless the user explicitly chose to replace it
+13. Based on user answers, determine the scope:
+    - **Additive merge** (minor additions to an existing skill) → write a unified diff to `lessons/YYYYMMDD-personalize-<slug>.diff` with a companion `.md`.
+    - **New skill or substantial rewrite** → hand off to `skill-creator`: describe the desired skill, provide the source material and user's confirmed preferences as context, and follow its draft→test→iterate loop. Output lands in `lessons/` as a proposal.
 
-13. Write the diff to `lessons/YYYYMMDD-personalize-<slug>.diff` with a companion `.md` documenting what was included, what was skipped, and why.
+14. Tell the user: *"Ready in `lessons/`. Review and apply with `git apply` when satisfied."*
 
-14. Tell the user: *"Diff ready at `lessons/YYYYMMDD-personalize-<slug>.diff`. Review and apply with `git apply` when satisfied."*
+---
+
+## Mode 3 — Create
+
+Activate when the user says "create a skill for X" or "build a new skill".
+
+15. Capture intent: what should the skill do, when should it trigger, what's the expected output?
+16. Check `npx skills find "<intent>"` — if a close match exists, suggest integrating it instead (Mode 2).
+17. If creating from scratch, hand off to `skill-creator` with the captured intent. Follow its draft→test→iterate loop fully. Output lands in `lessons/` as a proposal.
 
 ---
 
@@ -120,10 +137,13 @@ Activate when the user says "personalize", "integrate this skill", or provides a
 
 - Never write directly to any `SKILL.md` file. Always propose. The human merges.
 - Create `lessons/` if it does not exist.
-- In Personalize mode, err toward asking rather than assuming. One unanswered question is worth more than a wrong assumption baked into a diff.
+- All skill creation and significant rewrites go through `skill-creator`. Raw diffs are only for minor, targeted changes.
+- Err toward asking rather than assuming. One unanswered question beats a wrong assumption baked into a diff.
 
 ## Example
 
-**Session mode**: Session with 4 TODOs; 1 experiment failed due to unset random seed → `lessons/20260329-seed-reproducibility.diff`.
+**Session mode**: Experiment failed due to unset random seed. Minor → `lessons/20260329-seed-reproducibility.diff`. New workflow implied → hand off to `skill-creator` to draft a `reproducibility-check` skill.
 
-**Personalize mode**: User says "integrate Feynman's audit skill" → reads `audit/SKILL.md`, detects no name conflict, notes it requires no extra MCP, finds no overlap with existing skills → asks "Do you want the paper-code gap detection only, or also the replication plan?" → proposes targeted diff adding `audit` to the `research` delegation table and creating `skills/audit/SKILL.md`.
+**Personalize mode**: User says "find me a skill for LaTeX compilation" → `npx skills find "latex"` returns 3 results → user picks one → reads it, finds no conflicts → substantial enough to need skill-creator → draft→test→iterate → `lessons/20260401-personalize-latex.diff`.
+
+**Create mode**: User says "create a skill for Slack notifications" → `npx skills find "slack"` finds a close match → suggests integrating it → user confirms → Mode 2 kicks in.

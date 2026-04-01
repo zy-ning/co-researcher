@@ -2,6 +2,9 @@
 
 ![logo](assets/logo.png)
 
+
+[中文](README_CN.md) | [English](README.md)
+
 一个可扩展、自我进化的 Agent 技能包，专为自主 ML 研究设计。就像 oh-my-zsh 之于 shell——从五个核心技能出发，通过 `evolve` 将技能包个性化为你自己的工作流。
 
 ## 安装

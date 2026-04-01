@@ -9,7 +9,15 @@ Own `RESEARCH.md`. Use it as the ground truth for project state.
 
 ## Session Start
 
-1. If `RESEARCH.md` does not exist, offer to initialize from `templates/RESEARCH.md.template` before continuing.
+1. If `RESEARCH.md` does not exist, initialize the project:
+   - If `templates/RESEARCH.md.template` exists locally, copy it.
+   - Otherwise, download it (and `CLAUDE.md`) from the pack's GitHub repo:
+     ```bash
+     curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/templates/RESEARCH.md.template -o templates/RESEARCH.md.template
+     curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/CLAUDE.md -o CLAUDE.md
+     cp templates/RESEARCH.md.template RESEARCH.md
+     ```
+   - Ask the user to fill in `## Goal`, then proceed.
 2. Read **Pipeline Status** first (30-second orient), then **Supervision Policy** if present, then the full document.
 
 ## Supervision Policy

@@ -24,30 +24,25 @@ Copy and paste this prompt to your LLM agent (Claude Code, Open Code, Codex, etc
 Install and configure "oh-my-coresearcher" skill pack following the instructions in https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/README.md and https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/docs/agent-setup.md.
 ```
 
-Quick install with skills.sh CLI:
-```bash
-npx skills add zy-ning/co-researcher
-```
-
 > **For agents** — fetch and follow [`docs/agent-setup.md`](docs/agent-setup.md) autonomously.
 > **For humans** — follow the steps below.
 
 
 ### 1. Install this pack
 
-Preferred (skills.sh):
-
 ```bash
-npx skills add zy-ning/co-researcher
+# Project-local (installs into current directory)
+curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash
+
+# Global (skills available in any project)
+curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash -s -- --global
 ```
 
-Manual fallback:
+Installs: skills → `.claude/skills/`, templates → `templates/`, `CLAUDE.md` → project root (or `~/.claude/co-researcher/` for global).
 
+Alternative via skills.sh (skills only — no templates or CLAUDE.md):
 ```bash
-git clone <repo-url> oh-my-coresearcher
-cd oh-my-coresearcher
-./install.sh          # project-local (.claude/skills/)
-./install.sh --global # or globally (~/.claude/skills/)
+npx skills add zy-ning/co-researcher
 ```
 
 ### 2. ARIS skill pack (required)
@@ -98,11 +93,15 @@ Use `evolve` (personalize mode) to selectively pull skills from any of these:
 
 ## Start a new project
 
-```bash
-cp templates/RESEARCH.md.template RESEARCH.md
-```
+Run `/research` in your project directory. If `RESEARCH.md` is missing, the skill auto-downloads the template and `CLAUDE.md` from GitHub and prompts you to fill in the goal.
 
-Edit the Goal, then run `/research` to kick off.
+Manual fallback (if offline or installed via `install.sh`):
+
+```bash
+cp templates/RESEARCH.md.template RESEARCH.md  # project-local install
+# or
+cp ~/.claude/co-researcher/templates/RESEARCH.md.template RESEARCH.md  # global install
+```
 
 ## Supervision control
 

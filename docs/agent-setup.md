@@ -6,19 +6,11 @@ Follow these steps in order. Run each command, verify it succeeded before contin
 
 ## Step 1 — Install this pack
 
-Preferred (skills.sh CLI):
-
 ```bash
-npx skills add zy-ning/co-researcher --all
+curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash -s -- --global
 ```
 
-Manual fallback:
-
-```bash
-git clone <repo-url> oh-my-coresearcher
-cd oh-my-coresearcher
-./install.sh --global
-```
+This installs skills to `~/.claude/skills/`, templates to `~/.claude/co-researcher/templates/`, and `CLAUDE.md` to `~/.claude/co-researcher/`.
 
 Verify: `ls ~/.claude/skills/research/SKILL.md` exists.
 
@@ -86,13 +78,13 @@ Verify: `which latexmk` returns a path.
 
 ## Step 6 — Start a project
 
-```bash
-cp ~/.claude/skills/research/../../templates/RESEARCH.md.template ./RESEARCH.md
-# or from the cloned repo:
-# cp oh-my-coresearcher/templates/RESEARCH.md.template ./RESEARCH.md
-```
+In your research project directory, invoke the `research` skill. If `RESEARCH.md` is missing, the skill will auto-download the template and `CLAUDE.md` from GitHub and prompt you to fill in `## Goal`.
 
-Edit `RESEARCH.md`: fill in `## Goal` with the research direction.
+Manual fallback (if offline):
+```bash
+cp ~/.claude/co-researcher/templates/RESEARCH.md.template ./RESEARCH.md
+cp ~/.claude/co-researcher/CLAUDE.md ./CLAUDE.md
+```
 
 Then invoke the `research` skill to begin.
 
@@ -106,4 +98,6 @@ Then invoke the `research` skill to begin.
 | ARIS skills | `ls ~/.claude/skills/research-lit/ ~/.claude/skills/auto-review-loop/` |
 | Codex MCP | `claude mcp list \| grep codex` |
 | Feynman (optional) | `ls ~/.claude/skills/alpha-research/` |
+| Templates | `ls ~/.claude/co-researcher/templates/RESEARCH.md.template` |
+| CLAUDE.md | `ls ~/.claude/co-researcher/CLAUDE.md` |
 | LaTeX (optional) | `which latexmk` |
