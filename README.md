@@ -8,6 +8,8 @@ An extensible, self-improving Agent skill pack for autonomous ML research. Like 
 
 A co-researcher, **fully yours**:
 
+<img src="assets/illus.png" alt="illus" style="border-radius: 20px;">
+
 > - **Autonomous but controllable.** Customize the supervision policy: when to ask, notify, or just do. Checkpoints, resource rules, idea-change rules — all configurable.
 > - **Inferring agent.** `research` spots gaps, adjusts the todo list, and asks before acting — not a fixed pipeline.
 > - **Adversarial review.** Critic runs in an isolated context. Returns FATAL/MAJOR/MINOR issues + PROCEED/REFINE/PIVOT.
