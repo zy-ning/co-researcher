@@ -4,11 +4,11 @@
 
 [中文](README_CN.md) | [English](README.md)
 
-An extensible, self-improving Agent skill pack for autonomous ML research. Like oh-my-zsh but for research agents — five core skills, grow to fit your workflow.
+**Oh My Co-Researcher** is an extensible, self-improving Agent skill pack for autonomous ML research. Like oh-my-zsh but for research agents — five core skills, grow to fit your workflow.
 
 A co-researcher, **fully yours**:
 
-<img src="assets/illus.png" alt="illus" style="border-radius: 20px;">
+![illus](assets/illus.png)
 
 > - **Autonomous but controllable.** Customize the supervision policy: when to ask, notify, or just do. Checkpoints, resource rules, idea-change rules — all configurable.
 > - **Inferring agent.** `research` spots gaps, adjusts the todo list, and asks before acting — not a fixed pipeline.
