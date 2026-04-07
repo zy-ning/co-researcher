@@ -4,7 +4,7 @@
 
 [中文](README_CN.md) | [English](README.md)
 
-**Oh My Co-Researcher** is an extensible, self-improving Agent skill pack for autonomous ML research. Like oh-my-zsh but for research agents — five core skills, grow to fit your workflow.
+**Oh My Co-Researcher** is an extensible, self-improving Agent skill pack for autonomous ML research. Like oh-my-zsh but for research agents — start from a lean core and grow to fit your workflow.
 
 A co-researcher, **fully yours**:
 
@@ -23,7 +23,7 @@ A co-researcher, **fully yours**:
 
 Copy and paste this prompt to your LLM agent (Claude Code, Open Code, Codex, etc.):
 ```
-Install and configure "oh-my-coresearcher" skill pack following the instructions in https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/README.md and https://raw.githubusercontent.com/zy-ning/co-researcher/refs/heads/main/docs/agent-setup.md.
+Install and configure "Oh_My_Co-Researcher" skill pack following the instructions in https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/refs/heads/main/README.md and https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/refs/heads/main/docs/agent-setup.md.
 ```
 
 > **For agents** — fetch and follow [`docs/agent-setup.md`](docs/agent-setup.md) autonomously.
@@ -34,17 +34,17 @@ Install and configure "oh-my-coresearcher" skill pack following the instructions
 
 ```bash
 # Project-local (installs into current directory)
-curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/install.sh | bash
 
 # Global (skills available in any project)
-curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash -s -- --global
+curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/install.sh | bash -s -- --global
 ```
 
-Installs: skills → `.claude/skills/`, templates → `templates/`, `CLAUDE.md` → project root (or `~/.claude/co-researcher/` for global).
+Installs: skills → `.claude/skills/`, templates → `templates/`, skillpacks → `skillpacks/`, `CLAUDE.md` → project root (or `~/.claude/co-researcher/` for global).
 
 Alternative via skills.sh (skills only — no templates or CLAUDE.md):
 ```bash
-npx skills add zy-ning/co-researcher
+npx skills add zy-ning/Oh_My_Co-Researcher
 ```
 
 ### 2. ARIS skill subset (recommended)
@@ -107,12 +107,32 @@ Use `evolve` (personalize mode) to selectively pull skills from any of these:
 | Pack | What it adds |
 |------|-------------|
 | [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) | Best source of research primitives to import selectively: lit survey, refinement, experiment planning, claim checking |
-| [Feynman](https://github.com/getcompanion-ai/feynman) | AlphaXiv paper Q&A, audit, deep research |
 | [Feynman](https://github.com/getcompanion-ai/feynman) | Best optional add-on for AlphaXiv paper Q&A, audit, and cited research briefs |
 | [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | Alternative end-to-end backbone with 9 stages, SLURM/GPU orchestration, and notifications |
 | [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | Heavyweight autonomous research system with multi-stage planning, guardrails, and self-healing loops |
 | [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | Large capability library for specific ML tasks, infrastructure, and evaluation workflows |
 | [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | Specialist pack for academic writing, review, and paper-production workflows |
+
+## Skillpack registry
+
+This repo now follows a **lean core + curated registry** model:
+
+- built-in core skills stay the default base
+- external packs are tracked in `skillpacks/skill_dictionary.yaml`
+- curated bundles live in `skillpacks/presets/*.yaml`
+- project-specific choices live in `.co-researcher/skills.yaml`
+
+Use `customize` when you want the repo to recommend a stack instead of manually stitching many external skills together.
+
+Typical flow:
+
+1. choose a workflow profile (`core-only`, `literature-heavy`, `experiment-heavy`, `academic-rigor`, `balanced`, or custom)
+2. choose dependency tolerance
+3. choose autonomy style and resource policy
+4. confirm a preset or custom stack
+5. write `.co-researcher/skills.yaml`
+
+See [`docs/skillpack-customization.md`](docs/skillpack-customization.md) for the registry model, config shape, and example project-local config.
 
 ## Start a new project
 
@@ -153,6 +173,8 @@ Backward compatibility: if `## Supervision Policy` is absent, the current confir
 
 For full details, see [`docs/supervision-system.md`](docs/supervision-system.md).
 
+If you want to configure supervision together with preferred skillpacks and presets, use `customize` instead.
+
 ## Core skills
 
 | Skill | When to use |
@@ -161,6 +183,8 @@ For full details, see [`docs/supervision-system.md`](docs/supervision-system.md)
 | `experiment` | Runs ML experiments: isolated venv, time-budgeted, failure-handled. Supports BFS mode for autonomous design space search. |
 | `review` | Adversarial critique with FATAL/MAJOR/MINOR severity. Falls back through Codex → llm → minimax. |
 | `write` | Paper drafting grounded in RESEARCH.md results. Marks `[UNGROUNDED]` and `[UNVERIFIED]` inline. |
+| `supervision` | Configures `## Supervision Policy` in `RESEARCH.md` through a preset-first flow. |
+| `customize` | Project onboarding and personalization. Recommends presets/skillpacks from the curated registry and writes `.co-researcher/skills.yaml`. |
 | `evolve` | Session-end lesson extraction **and** skill pack personalization. Proposes diffs — human merges only. |
 
 ## How the agent loop works
@@ -190,7 +214,7 @@ Off by default — only activates when you explicitly ask. Even under `wild`, BF
 
 ## Personalizing the skill pack
 
-`evolve` has two modes:
+`evolve` has three modes:
 
 **Session mode** — run at session end. Extracts generalizable lessons from RESEARCH.md History and git log, proposes diffs to affected SKILL.md files.
 
@@ -200,6 +224,10 @@ Off by default — only activates when you explicitly ask. Even under `wild`, BF
 3. Detect scope overlap and show you the delta vs what you already have
 4. Interview you — asks all questions at once: what to replace/merge/skip, which dependencies you have, what you explicitly don't want
 5. Propose a curated diff incorporating only what you confirmed
+
+**Registry mode** — refresh `skillpacks/skill_dictionary.yaml` and preset recommendations. It assesses external packs, records concise compatibility/necessity judgments, and keeps the shared registry decision-oriented.
+
+When a substantial skill rewrite or new skill is needed, `evolve` requires an external `skill-creator` skill. If it is unavailable, `evolve` should stop and tell you instead of pretending the creation step succeeded.
 
 ```bash
 /evolve                                     # session mode
@@ -222,3 +250,5 @@ Skills are never auto-modified. Human merges only.
 **Skill evolution loop**: `evolve` (session) → `lessons/` → human review → `git apply` → better skills next session.
 
 **Personalization loop**: find a useful skill elsewhere → `evolve` (personalize) → curated diff → merge → your pack grows.
+
+**Registry loop**: assess a new pack or refresh an existing one → `evolve` (registry) → update `skillpacks/skill_dictionary.yaml` / presets → `customize` recommends better stacks next time.

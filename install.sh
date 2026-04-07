@@ -1,16 +1,16 @@
 #!/bin/bash
-# oh-my-coresearcher installer
+# Oh_My_Co-Researcher installer
 #
 # Remote (preferred):
-#   curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash
-#   curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash -s -- --global
+#   curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/install.sh | bash -s -- --global
 #
 # Local (from cloned repo):
 #   ./install.sh [--global]
 
 set -euo pipefail
 
-REPO="zy-ning/co-researcher"
+REPO="zy-ning/Oh_My_Co-Researcher"
 BRANCH="main"
 ARCHIVE="https://github.com/$REPO/archive/refs/heads/$BRANCH.tar.gz"
 
@@ -23,10 +23,12 @@ esac
 if $GLOBAL; then
   SKILLS_DEST="$HOME/.claude/skills"
   TEMPLATES_DEST="$HOME/.claude/co-researcher/templates"
+  SKILLPACKS_DEST="$HOME/.claude/co-researcher/skillpacks"
   CLAUDE_DIR="$HOME/.claude/co-researcher"
 else
   SKILLS_DEST="$PWD/.claude/skills"
   TEMPLATES_DEST="$PWD/templates"
+  SKILLPACKS_DEST="$PWD/skillpacks"
   CLAUDE_DIR="$PWD"
 fi
 
@@ -38,7 +40,7 @@ else
   # curl | bash or run from wrong dir — download archive
   TMP="$(mktemp -d)"
   trap 'rm -rf "$TMP"' EXIT
-  echo "Downloading oh-my-coresearcher..."
+  echo "Downloading Oh_My_Co-Researcher..."
   curl -fsSL "$ARCHIVE" | tar -xz -C "$TMP" --strip-components=1
   SRC="$TMP"
 fi
@@ -52,6 +54,10 @@ echo "✓ Skills → $SKILLS_DEST"
 mkdir -p "$TEMPLATES_DEST"
 cp -r "$SRC/templates"/* "$TEMPLATES_DEST/"
 echo "✓ Templates → $TEMPLATES_DEST"
+
+mkdir -p "$SKILLPACKS_DEST"
+cp -r "$SRC/skillpacks"/* "$SKILLPACKS_DEST/"
+echo "✓ Skillpacks → $SKILLPACKS_DEST"
 
 # 3. CLAUDE.md
 mkdir -p "$CLAUDE_DIR"
@@ -70,8 +76,10 @@ if $GLOBAL; then
   echo "Next steps:"
   echo "  In your research project, run /research — it will auto-initialize RESEARCH.md."
   echo "  Or manually: cp ~/.claude/co-researcher/templates/RESEARCH.md.template ./RESEARCH.md"
+  echo "  Optional stack config: cp ~/.claude/co-researcher/templates/skills.yaml.template ./.co-researcher/skills.yaml"
 else
   echo "Next steps:"
   echo "  cp templates/RESEARCH.md.template RESEARCH.md"
+  echo "  Optional stack config: mkdir -p .co-researcher && cp templates/skills.yaml.template .co-researcher/skills.yaml"
   echo "  Then run /research to start."
 fi

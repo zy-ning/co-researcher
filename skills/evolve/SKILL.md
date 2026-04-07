@@ -7,17 +7,23 @@ description: >-
   mode: searches the skills registry via `npx skills find`, reads the target
   skill(s), checks compatibility and scope overlap against installed skills,
   interviews the user to understand what they want and what to skip, then
-  creates or improves skills using skill-creator. Create mode: designs a brand-
+  creates or improves skills using skill-creator. Registry mode: curates
+  `skillpacks/skill_dictionary.yaml` and `skillpacks/presets/*.yaml` by assessing external
+  packs, judging necessity/compatibility, and recommending subsets. Create
+  mode: designs a brand-
   new skill from scratch using skill-creator. Never edits SKILL.md directly —
   all changes go through skill-creator's draft→test→iterate loop, human merges.
   Trigger phrases: "end session", "extract lessons", "personalize my skills",
   "integrate this skill", "update skillpack", "find a skill for", "create a
-  skill", "improve skill".
+  skill", "improve skill", "refresh the skillpack registry", "assess this skill
+  pack", "update skill_dictionary.yaml", "update index.yaml".
 ---
 
 # Evolve
 
-Three modes: **Session** (run at session end), **Personalize** (discover and integrate external skills), **Create** (build a new skill from scratch). Skill creation and significant rewrites always go through `skill-creator` — never write to SKILL.md directly.
+Four modes: **Session** (run at session end), **Personalize** (discover and integrate external skills), **Registry** (curate `skillpacks/skill_dictionary.yaml` and presets), **Create** (build a new skill from scratch). Skill creation and significant rewrites always go through `skill-creator` — never write to SKILL.md directly.
+
+If `skill-creator` is unavailable in the current environment, stop and tell the user. Do not silently simulate its workflow.
 
 ---
 
@@ -123,13 +129,62 @@ Activate when the user says "personalize", "integrate this skill", "find a skill
 
 ---
 
-## Mode 3 — Create
+## Mode 3 — Registry
+
+Activate when the user asks to refresh the tracked skill-pack catalog, assess a new pack, compare packs, or update `skillpacks/skill_dictionary.yaml` / preset definitions.
+
+### Registry inputs
+
+Read:
+
+- `skillpacks/skill_dictionary.yaml`
+- `skillpacks/presets/*.yaml`
+- `README.md` / `README_CN.md` pack comparison sections when relevant
+
+If the user points at a new external repo, read its README and any obvious skill inventory files first.
+
+### Responsibilities
+
+15. Maintain `skillpacks/skill_dictionary.yaml` as the shared curated registry.
+
+16. For each pack or skill being assessed, judge:
+    - **workflow fit**
+    - **gap coverage**
+    - **overlap cost**
+    - **dependency burden**
+    - **maintenance health**
+    - **composability**
+    - **supervision sensitivity**
+    - **autonomy bias**
+
+17. Normalize outputs into concise labels when possible:
+    - necessity: `default | recommended | optional | niche | avoid`
+    - compatibility: `high | medium | low`
+    - role: `base | donor | overlay | niche | experimental`
+
+18. Recommend **subsets**, not bulk imports, unless the user clearly asks for a full-pack strategy.
+
+19. Update presets when the registry change meaningfully affects default recommendations.
+
+20. Keep rationales concise and decision-oriented. The registry is for recommendation and comparison, not exhaustive catalog dumps.
+
+### Safety boundary
+
+21. Registry curation may edit `skillpacks/skill_dictionary.yaml` and `skillpacks/presets/*.yaml`, but changes to existing `SKILL.md` behavior still require either:
+    - a minor diff proposal in `lessons/`, or
+    - a `skill-creator` handoff for substantial rewrites.
+
+22. If a registry update would imply changing default project behavior materially, ask before proceeding.
+
+---
+
+## Mode 4 — Create
 
 Activate when the user says "create a skill for X" or "build a new skill".
 
-15. Capture intent: what should the skill do, when should it trigger, what's the expected output?
-16. Check `npx skills find "<intent>"` — if a close match exists, suggest integrating it instead (Mode 2).
-17. If creating from scratch, hand off to `skill-creator` with the captured intent. Follow its draft→test→iterate loop fully. Output lands in `lessons/` as a proposal.
+23. Capture intent: what should the skill do, when should it trigger, what's the expected output?
+24. Check `npx skills find "<intent>"` — if a close match exists, suggest integrating it instead (Mode 2).
+25. If creating from scratch, hand off to `skill-creator` with the captured intent. Follow its draft→test→iterate loop fully. Output lands in `lessons/` as a proposal.
 
 ---
 
@@ -137,6 +192,7 @@ Activate when the user says "create a skill for X" or "build a new skill".
 
 - Never write directly to any `SKILL.md` file. Always propose. The human merges.
 - Create `lessons/` if it does not exist.
+- `skillpacks/skill_dictionary.yaml` and `skillpacks/presets/*.yaml` are curated repo metadata and may be updated directly in Registry mode when the user asks.
 - All skill creation and significant rewrites go through `skill-creator`. Raw diffs are only for minor, targeted changes.
 - Err toward asking rather than assuming. One unanswered question beats a wrong assumption baked into a diff.
 

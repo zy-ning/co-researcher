@@ -1,0 +1,10 @@
+id: core-only
+summary: Minimal default stack using only the built-in co-researcher skills.
+
+packs:
+  core:
+    enabled: true
+
+supervision:
+  mode: checkpointed
+  risk_profile: balanced

@@ -1,0 +1,17 @@
+id: balanced
+summary: Default balanced profile with the built-in core plus essential ARIS donor skills (research-lit, research-refine, experiment-plan, result-to-claim). Also the canonical "core plus ARIS essentials" starting point.
+
+packs:
+  core:
+    enabled: true
+  aris:
+    enabled: true
+    selected_skills:
+      - research-lit
+      - research-refine
+      - experiment-plan
+      - result-to-claim
+
+supervision:
+  mode: checkpointed
+  risk_profile: balanced

@@ -1,4 +1,4 @@
-# oh-my-coresearcher — Agent Setup
+# Oh_My_Co-Researcher — Agent Setup
 
 Follow these steps in order. Run each command, verify it succeeded before continuing.
 
@@ -7,7 +7,7 @@ Follow these steps in order. Run each command, verify it succeeded before contin
 ## Step 1 — Install this pack
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/install.sh | bash -s -- --global
+curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/install.sh | bash -s -- --global
 ```
 
 This installs skills to `~/.claude/skills/`, templates to `~/.claude/co-researcher/templates/`, and `CLAUDE.md` to `~/.claude/co-researcher/`.
@@ -85,7 +85,32 @@ Verify: `which latexmk` returns a path.
 
 ---
 
-## Step 6 — Start a project
+## Step 6 — Skillpack registry and presets (optional, recommended)
+
+This pack supports a curated registry and project-local customization model:
+
+- project-local install registry: `skillpacks/skill_dictionary.yaml`
+- global install registry: `~/.claude/co-researcher/skillpacks/skill_dictionary.yaml`
+- preset bundles live alongside that registry in `skillpacks/presets/` or `~/.claude/co-researcher/skillpacks/presets/`
+- project-local config: `.co-researcher/skills.yaml`
+
+Recommended flow:
+
+1. start with the built-in core
+2. use `customize` to choose a preset or custom stack
+3. let `evolve` refresh the shared registry when you want to assess new packs
+
+Use `.co-researcher/skills.yaml` to record:
+
+- enabled packs and selected skills
+- preference knobs such as overlap/dependency tolerance
+- supervision policy for the current project
+
+See [`docs/skillpack-customization.md`](skillpack-customization.md) for the full model.
+
+---
+
+## Step 7 — Start a project
 
 In your research project directory, invoke the `research` skill. If `RESEARCH.md` is missing, the skill will auto-download the template and `CLAUDE.md` from GitHub and prompt you to fill in `## Goal`.
 
@@ -110,3 +135,5 @@ Then invoke the `research` skill to begin.
 | Templates | `ls ~/.claude/co-researcher/templates/RESEARCH.md.template` |
 | CLAUDE.md | `ls ~/.claude/co-researcher/CLAUDE.md` |
 | LaTeX (optional) | `which latexmk` |
+| Registry (project-local install) | `ls skillpacks/skill_dictionary.yaml skillpacks/presets/` |
+| Registry (global install) | `ls ~/.claude/co-researcher/skillpacks/skill_dictionary.yaml ~/.claude/co-researcher/skillpacks/presets/` |

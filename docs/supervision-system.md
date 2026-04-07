@@ -1,6 +1,6 @@
 # Supervision System
 
-`oh-my-coresearcher` uses a supervision system so the user can control how much autonomy the agent has without introducing a separate runtime or config subsystem.
+`Oh_My_Co-Researcher` uses a supervision system so the user can control how much autonomy the agent has without introducing a separate runtime or config subsystem.
 
 The source of truth is still markdown: supervision policy lives in `RESEARCH.md` under `## Supervision Policy`.
 

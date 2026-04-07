@@ -12,25 +12,32 @@ Own `RESEARCH.md`. Use it as the ground truth for project state.
 1. If `RESEARCH.md` does not exist, initialize the project:
    - If `templates/RESEARCH.md.template` exists locally, copy it.
    - Otherwise, download it (and `CLAUDE.md`) from the pack's GitHub repo:
-     ```bash
-     curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/templates/RESEARCH.md.template -o templates/RESEARCH.md.template
-     curl -fsSL https://raw.githubusercontent.com/zy-ning/co-researcher/main/CLAUDE.md -o CLAUDE.md
-     cp templates/RESEARCH.md.template RESEARCH.md
-     ```
+      ```bash
+      mkdir -p templates
+      curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/templates/RESEARCH.md.template -o templates/RESEARCH.md.template
+      curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/CLAUDE.md -o CLAUDE.md
+      cp templates/RESEARCH.md.template RESEARCH.md
+      ```
    - Ask the user to fill in `## Goal`, then proceed.
-2. Read **Pipeline Status** first (30-second orient), then **Supervision Policy** if present, then the full document.
+2. If `.co-researcher/skills.yaml` exists, read it before planning so you know the project's preferred skillpacks, subset choices, and supervision defaults.
+3. Read **Pipeline Status** first (30-second orient), then **Supervision Policy** if present, then the full document.
 
 ## Supervision Policy
 
-3. `## Supervision Policy` in RESEARCH.md is optional. If absent, default to confirmation-first behavior throughout.
-4. If the user asks to configure automation or supervision, update the policy through a short interactive flow: choose a preset (`manual` / `checkpointed` / `autonomous` / `wild`), then confirm notification events, approval gates, stop limits, resource rules, and idea-change handling.
-5. Policy dimensions:
+4. `## Supervision Policy` in RESEARCH.md is optional. If absent, default to confirmation-first behavior throughout unless `.co-researcher/skills.yaml` specifies project-local supervision defaults.
+5. Precedence rule:
+   - `RESEARCH.md` `## Supervision Policy` overrides everything when present.
+   - `.co-researcher/skills.yaml` provides project-local defaults when RESEARCH.md does not define supervision policy yet.
+   - preset values are only the starting recommendation written by `customize`.
+6. If `.co-researcher/skills.yaml` exists, treat it as the project-local preference layer for preferred presets, enabled packs, selected donor skills, and supervision defaults.
+7. If the user asks to configure automation, supervision, or preferred skillpacks, use `customize` as the primary flow. Use direct inline RESEARCH.md edits only for lightweight policy adjustments when the user clearly wants that.
+8. Policy dimensions:
    - **Notify** — events to surface; if no channel exists, surface in the next user-visible update
    - **Approve** — action types requiring a pause; precedence: approval > notify-only > silent
    - **Stop** — target or limits (`target_reached`, `step_limit`, `time_budget`, `error_threshold`, `blocked`)
    - **Resources** — three classes: Service/API, Compute, Human/Physical; escalation rule is `forbid` / `notify` / `approve`
    - **Idea Changes** — improvements (notify), strategy pivots (notify or approve), compromises (approve by default)
-6. Preset behavior:
+9. Preset behavior:
    - `manual` — always stop for approval
    - `checkpointed` (default) — record approval-required issues in **Pending Approvals**, continue unrelated allowed work; stop only when nothing else remains
    - `autonomous` — notify but do not stop
@@ -38,18 +45,18 @@ Own `RESEARCH.md`. Use it as the ground truth for project state.
 
 ## Assess Before Acting
 
-7. Before executing any TODO, do a gap analysis:
+10. Before executing any TODO, do a gap analysis:
    - Compare **Goal** against completed **Context** entries. What's missing?
    - Surface stale **Blocked** items immediately.
    - Gaps to catch: experiment done but no result analysis; results done but no paper; paper drafted but no review.
 
-8. If the TODO list is stale or incomplete, apply the supervision policy for `todo-adjustments` (approve → wait; notify → announce and continue; absent → propose and wait), then add/remove/reorder as needed.
+11. If the TODO list is stale or incomplete, apply the supervision policy for `todo-adjustments` (approve → wait; notify → announce and continue; absent → propose and wait), then add/remove/reorder as needed.
 
 ## Act
 
-9. Pick the highest-priority unblocked TODO. Announce: `→ Working on: <TODO text>`.
+12. Pick the highest-priority unblocked TODO. Announce: `→ Working on: <TODO text>`.
 
-10. Delegate to the right skill:
+13. Delegate to the right skill:
 
    | Need | Skill |
    |------|-------|
@@ -66,11 +73,11 @@ Own `RESEARCH.md`. Use it as the ground truth for project state.
    | Lesson extraction | `evolve` (this pack) |
    | Unclear | Ask the user, or do it directly. |
 
-11. When done: check off TODO, append timestamped **Context** entry, update **State** and **Pipeline Status**, save `RESEARCH.md`.
+14. When done: check off TODO, append timestamped **Context** entry, update **State** and **Pipeline Status**, save `RESEARCH.md`.
 
 ## Proactive Loop
 
-12. After each completed TODO, surface the result briefly, then apply the supervision policy for the next move:
+15. After each completed TODO, surface the result briefly, then apply the supervision policy for the next move:
    - **Ambiguous next step** → describe 2–3 options and ask. Never silently pick among plausible directions.
    - **Approve / stop target reached** → ask before proceeding, or queue and continue unrelated work if `checkpointed`.
    - **Notify only** → announce the next action and continue.
@@ -88,6 +95,12 @@ Before starting, confirm: target file, metric + direction (e.g., minimize `val_b
 **DFS — default when direction is confirmed**
 
 Commit each meaningful step. `git stash` before risky moves; note the stash in **Context**.
+
+## Project-local Skill Config
+
+16. `.co-researcher/skills.yaml` is optional. If absent, keep existing behavior.
+17. If present, use it to prefer enabled donor packs and selected skills when choosing among overlapping external tools.
+18. Do not silently rewrite `.co-researcher/skills.yaml` during normal orchestration. Use `customize` when the user wants to change stack or supervision preferences.
 
 ## Tone
 

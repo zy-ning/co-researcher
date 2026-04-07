@@ -5,34 +5,29 @@
 
 [中文](README_CN.md) | [English](README.md)
 
-一个可扩展、自我进化的 Agent 技能包，专为自主 ML 研究设计。就像 oh-my-zsh 之于 shell——从五个核心技能出发，通过 `evolve` 将技能包个性化为你自己的工作流。
+一个可扩展、自我进化的 Agent 技能包，专为自主 ML 研究设计。就像 oh-my-zsh 之于 shell——从精简核心出发，通过 `evolve` 将技能包个性化为你自己的工作流。
 
-## 安装
-
-使用 skills.sh CLI 一键安装：
-
-```bash
-npx skills add zy-ning/co-researcher
-```
+## 安装与配置
 
 > **AI 代理** — 自主获取并遵循 [`docs/agent-setup.md`](docs/agent-setup.md)。
 > **人类用户** — 按以下步骤操作。
 
 ### 1. 安装本技能包
 
-推荐方式（skills.sh）：
-
 ```bash
-npx skills add zy-ning/co-researcher
+# 项目级安装（安装到当前目录）
+curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/install.sh | bash
+
+# 全局安装（任意项目可用）
+curl -fsSL https://raw.githubusercontent.com/zy-ning/Oh_My_Co-Researcher/main/install.sh | bash -s -- --global
 ```
 
-手动安装（备用）：
+安装内容：skills → `.claude/skills/`，templates → `templates/`，skillpacks → `skillpacks/`，`CLAUDE.md` → 项目根目录（全局安装时写入 `~/.claude/co-researcher/`）。
+
+仅安装 skills 的替代方式：
 
 ```bash
-git clone <repo-url> oh-my-coresearcher
-cd oh-my-coresearcher
-./install.sh          # 项目级安装 (.claude/skills/)
-./install.sh --global # 或全局安装 (~/.claude/skills/)
+npx skills add zy-ning/Oh_My_Co-Researcher
 ```
 
 ### 2. ARIS 精简技能集（推荐）
@@ -110,10 +105,37 @@ sudo apt install texlive-full latexmk poppler-utils
 | [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | 面向具体 ML 任务、基础设施和评测流程的大型能力库 |
 | [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | 偏学术写作、评审和论文生产流程的专业技能包 |
 
+## 技能包注册表
+
+本仓库采用 **精简核心 + 精选注册表** 模型：
+
+- 内置核心技能始终是默认基础层
+- 外部技能包记录在 `skillpacks/skill_dictionary.yaml`
+- 精选预设放在 `skillpacks/presets/*.yaml`
+- 项目级选择写入 `.co-researcher/skills.yaml`
+
+如果你不想手工拼接外部技能，使用 `customize` 即可让仓库基于能力需求推荐一套技能栈。
+
+典型流程：
+
+1. 选择工作流画像（`core-only`、`literature-heavy`、`experiment-heavy`、`academic-rigor`、`balanced` 或自定义）
+2. 选择依赖容忍度
+3. 选择自动化风格与资源策略
+4. 确认预设或自定义技能组合
+5. 写入 `.co-researcher/skills.yaml`
+
+完整说明见 [`docs/skillpack-customization.md`](docs/skillpack-customization.md)。
+
 ## 新建项目
+
+在项目目录里运行 `/research`。如果 `RESEARCH.md` 缺失，技能会自动从 GitHub 下载模板与 `CLAUDE.md`，并提示你填写 `## Goal`。
+
+离线或本地安装时，可手动回退：
 
 ```bash
 cp templates/RESEARCH.md.template RESEARCH.md
+# 或
+cp ~/.claude/co-researcher/templates/RESEARCH.md.template RESEARCH.md
 ```
 
 编辑 Goal 字段，然后运行 `/research` 启动。
@@ -145,6 +167,8 @@ cp templates/RESEARCH.md.template RESEARCH.md
 
 完整说明见 [`docs/supervision-system.md`](docs/supervision-system.md)。
 
+如果你想把监督策略和项目偏好的技能包一起配置，优先使用 `customize`。
+
 ## 核心技能
 
 | 技能 | 使用时机 |
@@ -153,6 +177,8 @@ cp templates/RESEARCH.md.template RESEARCH.md
 | `experiment` | 运行 ML 实验：隔离虚拟环境、时间预算、异常处理。支持 BFS 模式进行自主设计空间搜索。 |
 | `review` | 对抗性评审，分 FATAL/MAJOR/MINOR 三级。依次回退：Codex → llm → minimax。 |
 | `write` | 以 RESEARCH.md 结果为基础撰写论文。内联标注 `[UNGROUNDED]` 和 `[UNVERIFIED]`。 |
+| `supervision` | 通过先选预设再微调的方式，配置 `RESEARCH.md` 中的 `## Supervision Policy`。 |
+| `customize` | 项目级个性化入口。基于精选注册表推荐预设/技能包，并写入 `.co-researcher/skills.yaml`。 |
 | `evolve` | 会话结束时提取经验教训**并**个性化技能包。提出差异补丁——仅由人类合并。 |
 
 ## agent 循环原理
@@ -182,7 +208,7 @@ cp templates/RESEARCH.md.template RESEARCH.md
 
 ## 个性化技能包
 
-`evolve` 提供两种模式：
+`evolve` 提供三种模式：
 
 **会话模式** — 在会话结束时运行。从 RESEARCH.md History 和 git log 中提取可复用经验，提出对相关 SKILL.md 文件的修改建议。
 
@@ -192,6 +218,10 @@ cp templates/RESEARCH.md.template RESEARCH.md
 3. 检测范围重叠，展示与现有技能的差异
 4. 集中提问——一次性问完所有问题：替换/合并/跳过哪些，拥有哪些依赖，明确不需要什么
 5. 提出仅包含你确认内容的精选补丁
+
+**注册表模式** — 刷新 `skillpacks/skill_dictionary.yaml` 与预设建议。它会评估外部技能包、记录精简的必要性/兼容性判断，并维护共享注册表。
+
+当需要较大规模技能重写或新建技能时，`evolve` 依赖外部 `skill-creator` 技能；若当前环境没有它，`evolve` 应显式停止并告知用户，而不是假装这一步已经完成。
 
 ```bash
 /evolve                                     # 会话模式
@@ -214,3 +244,5 @@ git apply lessons/YYYYMMDD-personalize-slug.diff
 **技能进化循环**：`evolve`（会话） → `lessons/` → 人工审查 → `git apply` → 下次会话技能更强。
 
 **个性化循环**：发现有用的外部技能 → `evolve`（个性化） → 精选补丁 → 合并 → 技能包持续成长。
+
+**注册表循环**：评估新技能包或刷新已有条目 → `evolve`（注册表） → 更新 `skillpacks/skill_dictionary.yaml` / 预设 → 下次 `customize` 给出更合适的推荐。

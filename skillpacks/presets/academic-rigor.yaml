@@ -1,0 +1,19 @@
+id: academic-rigor
+summary: Prioritizes integrity, peer review, and paper-quality discipline for publication-oriented workflows.
+
+packs:
+  core:
+    enabled: true
+  academic-research-skills:
+    enabled: true
+    selected_skills:
+      - deep-research
+      - academic-paper-reviewer
+  aris:
+    enabled: true
+    selected_skills:
+      - result-to-claim
+
+supervision:
+  mode: manual
+  risk_profile: conservative

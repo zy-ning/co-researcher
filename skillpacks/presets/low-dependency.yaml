@@ -1,0 +1,15 @@
+id: low-dependency
+summary: Keeps external dependencies light while still filling the most important research gaps.
+
+packs:
+  core:
+    enabled: true
+  aris:
+    enabled: true
+    selected_skills:
+      - research-lit
+      - experiment-plan
+
+supervision:
+  mode: checkpointed
+  risk_profile: balanced

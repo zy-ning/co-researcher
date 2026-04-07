@@ -1,0 +1,45 @@
+version: 1
+profile: balanced
+
+selection:
+  preset: balanced
+
+enabled_packs:
+  core:
+    enabled: true
+  aris:
+    enabled: true
+    mode: subset
+    selected_skills:
+      - research-lit
+      - research-refine
+      - experiment-plan
+      - result-to-claim
+
+preferences:
+  minimize_overlap: true
+  prefer_low_dependency: true
+  prefer_subset_installs: true
+  allow_experimental_packs: false
+
+supervision:
+  mode: checkpointed
+  risk_profile: balanced
+  approval_policy:
+    install_new_skills: ask
+    update_registry: ask
+    modify_config: ask
+    launch_experiments: ask
+    use_external_api: ask_first_use
+    run_long_review_loops: ask
+    create_commits: ask
+  resource_policy:
+    local_only: false
+    cloud_allowed: false
+    cluster_allowed: false
+  budget_policy:
+    enabled: true
+    api_budget_level: medium
+  execution_limits:
+    max_review_rounds: 2
+    require_confirmation_for_new_pack_imports: true

@@ -1,0 +1,468 @@
+version: 1
+last_updated: 2026-04-07
+
+packs:
+  - id: core
+    name: Oh My Co-Researcher Core
+    source_type: local
+    repo: local
+    summary: Lean built-in research orchestrator with controllable supervision, customizable stack selection, and composable delegation.
+    categories: [literature, execution, review, writing, supervision, customization, maintenance]
+    maturity: high
+    maintenance: active
+    recommended_role: base
+    install_mode: builtin
+    compatibility:
+      with_core: native
+      dependency_burden: low
+      autonomy_bias: balanced
+      notes:
+        - Default base for every project.
+        - External packs should extend this core, not replace it wholesale.
+    necessity:
+      level: default
+      rationale:
+        - Encodes the repo's primary workflow and supervision model.
+        - Provides the minimum viable stack even without external skill packs.
+    recommended_subset: [research, experiment, review, write, supervision, customize, evolve]
+    overlap_with_core: []
+    skills:
+      - id: core/research
+        name: research
+        category: literature
+        summary: Main orchestrator that reads RESEARCH.md, proposes next steps, and delegates.
+        necessity: default
+        compatibility: native
+      - id: core/experiment
+        name: experiment
+        category: execution
+        summary: Bounded experiment runner with optional BFS mode.
+        necessity: default
+        compatibility: native
+      - id: core/review
+        name: review
+        category: review
+        summary: Adversarial reviewer with isolated-critic fallback chain.
+        necessity: default
+        compatibility: native
+      - id: core/write
+        name: write
+        category: writing
+        summary: Grounded paper drafting and revision support.
+        necessity: default
+        compatibility: native
+      - id: core/evolve
+        name: evolve
+        category: maintenance
+        summary: Curates lessons and personalizes the skill ecosystem.
+        necessity: default
+        compatibility: native
+      - id: core/supervision
+        name: supervision
+        category: supervision
+        summary: Configures RESEARCH.md supervision policy through a preset-first flow.
+        necessity: default
+        compatibility: native
+      - id: core/customize
+        name: customize
+        category: customization
+        summary: Recommends presets and writes project-local skill stack preferences.
+        necessity: default
+        compatibility: native
+
+  - id: aris
+    name: ARIS
+    source_type: external
+    repo: https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep
+    summary: Broad research workflow donor pack with strong literature, ideation, planning, and evaluation primitives.
+    categories: [literature, ideation, planning, execution, review, writing, rebuttal]
+    maturity: high
+    maintenance: active
+    recommended_role: donor
+    install_mode: subset
+    compatibility:
+      with_core: high
+      dependency_burden: medium
+      autonomy_bias: balanced
+      notes:
+        - Best source of selectively imported research primitives.
+        - Full-pack install adds overlap with local review/write/experiment skills.
+    necessity:
+      level: recommended
+      rationale:
+        - Fills literature survey, idea refinement, planning, and claim-checking gaps well.
+        - Strong match for co-researcher's lean-core-plus-donor model.
+    recommended_subset: [research-lit, research-refine, experiment-plan, result-to-claim]
+    overlap_with_core: [review, write, experiment]
+    skills:
+      - id: aris/research-lit
+        name: research-lit
+        category: literature
+        summary: Literature survey and related-work search.
+        necessity: high
+        compatibility: high
+        overlap: [core/research]
+        substitutes: [feynman/alpha-research, academic-research-skills/deep-research]
+      - id: aris/research-refine
+        name: research-refine
+        category: ideation
+        summary: Refines vague directions into a problem-anchored method plan.
+        necessity: high
+        compatibility: high
+      - id: aris/experiment-plan
+        name: experiment-plan
+        category: planning
+        summary: Builds claim-driven experiment roadmaps and validation structure.
+        necessity: high
+        compatibility: high
+      - id: aris/result-to-claim
+        name: result-to-claim
+        category: review
+        summary: Checks what conclusions finished experiments actually support.
+        necessity: high
+        compatibility: high
+      - id: aris/arxiv
+        name: arxiv
+        category: literature
+        summary: Optional extra paper lookup and retrieval helper.
+        necessity: optional
+        compatibility: medium
+      - id: aris/paper-figure
+        name: paper-figure
+        category: writing
+        summary: Optional paper figure and table generation helper.
+        necessity: optional
+        compatibility: medium
+
+  - id: feynman
+    name: Feynman
+    source_type: external
+    repo: https://github.com/getcompanion-ai/feynman
+    summary: Research-agent pack focused on cited research briefs, AlphaXiv paper Q&A, audits, and replication workflows.
+    categories: [literature, review, execution, monitoring]
+    maturity: high
+    maintenance: active
+    recommended_role: overlay
+    install_mode: subset
+    compatibility:
+      with_core: medium
+      dependency_burden: medium
+      autonomy_bias: balanced
+      notes:
+        - Strong optional layer for AlphaXiv-centric paper workflows.
+        - Best used for audit/Q&A, not as the primary orchestrator.
+    necessity:
+      level: optional
+      rationale:
+        - Adds distinctive cited research and reproducibility workflows.
+        - Dependency burden is higher if AlphaXiv tooling is not already configured.
+    recommended_subset: [alpha-research, audit]
+    overlap_with_core: [research, review]
+    skills:
+      - id: feynman/alpha-research
+        name: alpha-research
+        category: literature
+        summary: AlphaXiv-powered paper Q&A, retrieval, and repo-linked reading.
+        necessity: medium
+        compatibility: medium
+        requirements: [AlphaXiv authentication]
+      - id: feynman/audit
+        name: audit
+        category: review
+        summary: Paper-to-code reproducibility and mismatch audit.
+        necessity: medium
+        compatibility: high
+      - id: feynman/deepresearch
+        name: deepresearch
+        category: literature
+        summary: Multi-agent cited research brief generation.
+        necessity: optional
+        compatibility: medium
+
+  - id: nanoresearch
+    name: NanoResearch
+    source_type: external
+    repo: https://github.com/OpenRaiser/NanoResearch
+    summary: End-to-end 9-stage research pipeline with real experiment execution, LaTeX output, and notification integrations.
+    categories: [literature, planning, execution, review, writing, infra]
+    maturity: medium
+    maintenance: active
+    recommended_role: niche
+    install_mode: subset
+    compatibility:
+      with_core: medium
+      dependency_burden: high
+      autonomy_bias: aggressive
+      notes:
+        - Best for users who explicitly want GPU/SLURM-backed autonomous experiment execution.
+        - Heavy overlap with co-researcher's orchestration model.
+    necessity:
+      level: niche
+      rationale:
+        - Valuable for experiment-heavy users with compute infrastructure.
+        - Too heavyweight to recommend as a default donor pack.
+    recommended_subset: [project:planning, project:experiment, project:analysis]
+    overlap_with_core: [research, experiment, review, write]
+    skills:
+      - id: nanoresearch/project-planning
+        name: /project:planning
+        category: planning
+        summary: Stage-specific experiment planning within NanoResearch's pipeline.
+        necessity: optional
+        compatibility: medium
+      - id: nanoresearch/project-experiment
+        name: /project:experiment
+        category: execution
+        summary: Setup, code generation, and experiment execution workflow.
+        necessity: medium
+        compatibility: medium
+        requirements: [local GPU or cluster access]
+        supervision_sensitivity: high
+      - id: nanoresearch/project-analysis
+        name: /project:analysis
+        category: review
+        summary: Result analysis and structured experiment evidence extraction.
+        necessity: optional
+        compatibility: medium
+
+  - id: autoresearchclaw
+    name: AutoResearchClaw
+    source_type: external
+    repo: https://github.com/aiming-lab/AutoResearchClaw
+    summary: Heavyweight autonomous research system with 23 stages, self-healing loops, and HITL/co-pilot controls.
+    categories: [literature, ideation, planning, execution, review, writing, monitoring, infra]
+    maturity: medium
+    maintenance: active
+    recommended_role: experimental
+    install_mode: subset
+    compatibility:
+      with_core: low
+      dependency_burden: high
+      autonomy_bias: aggressive
+      notes:
+        - Impressive full-system reference with strong guardrails and HITL concepts.
+        - More useful as a source of ideas than as a default pack to import directly.
+    necessity:
+      level: niche
+      rationale:
+        - High overlap with local orchestrator concepts and strong autonomy assumptions.
+        - Best for users explicitly seeking a maximal autonomous research lab.
+    recommended_subset: [HITL concepts, claim verification patterns]
+    overlap_with_core: [research, experiment, review, write, evolve]
+    skills:
+      - id: autoresearchclaw/hitl
+        name: HITL co-pilot patterns
+        category: monitoring
+        summary: Intervention modes and smart checkpoint ideas useful for supervision design.
+        necessity: optional
+        compatibility: medium
+      - id: autoresearchclaw/claim-verification
+        name: claim verification patterns
+        category: review
+        summary: Anti-fabrication and evidence-consistency concepts.
+        necessity: optional
+        compatibility: medium
+      - id: autoresearchclaw/execution-loops
+        name: self-healing execution loops
+        category: execution
+        summary: Autonomous experiment repair and pivot/refine loop patterns.
+        necessity: optional
+        compatibility: low
+        supervision_sensitivity: high
+
+  - id: ai-research-skills
+    name: AI-Research-SKILLs
+    source_type: external
+    repo: https://github.com/Orchestra-Research/AI-Research-SKILLs
+    summary: Large capability library spanning ML engineering, infrastructure, multimodal systems, evaluation, and autoresearch helpers.
+    categories: [execution, review, writing, infra, monitoring]
+    maturity: medium
+    maintenance: active
+    recommended_role: niche
+    install_mode: subset
+    compatibility:
+      with_core: medium
+      dependency_burden: medium
+      autonomy_bias: balanced
+      notes:
+        - Best treated as a deep capability library for specific needs.
+        - Too broad to recommend as a default add-on bundle.
+    necessity:
+      level: optional
+      rationale:
+        - Useful when a user needs specific ML or infrastructure workflows not covered elsewhere.
+        - Better for targeted imports than broad activation.
+    recommended_subset: [task-specific only]
+    overlap_with_core: [experiment, review, write]
+    skills:
+      - id: ai-research-skills/autoresearch
+        name: autoresearch
+        category: execution
+        summary: Autonomous research-oriented workflow helper.
+        necessity: optional
+        compatibility: medium
+      - id: ai-research-skills/eval
+        name: evaluation helpers
+        category: review
+        summary: Targeted evaluation and benchmarking support.
+        necessity: optional
+        compatibility: medium
+      - id: ai-research-skills/infra
+        name: infrastructure helpers
+        category: infra
+        summary: Specialist ML infrastructure and tooling support.
+        necessity: optional
+        compatibility: medium
+
+  - id: academic-research-skills
+    name: academic-research-skills
+    source_type: external
+    repo: https://github.com/Imbad0202/academic-research-skills
+    summary: Academic writing, integrity, and peer-review-focused pack with a compact four-skill core.
+    categories: [literature, review, writing, rebuttal, academic-integrity]
+    maturity: high
+    maintenance: active
+    recommended_role: overlay
+    install_mode: subset
+    compatibility:
+      with_core: high
+      dependency_burden: medium
+      autonomy_bias: balanced
+      notes:
+        - Strong source of writing/review rigor and integrity workflows.
+        - More writing-centric than experiment-centric.
+    necessity:
+      level: recommended
+      rationale:
+        - Good specialist add-on for academic paper quality and integrity checks.
+        - Smaller and easier to reason about than larger autonomous pipeline packs.
+    recommended_subset: [deep-research, academic-paper-reviewer]
+    overlap_with_core: [research, review, write]
+    skills:
+      - id: academic-research-skills/deep-research
+        name: deep-research
+        category: literature
+        summary: Structured academic research with guided and systematic-review modes.
+        necessity: medium
+        compatibility: high
+        substitutes: [aris/research-lit]
+      - id: academic-research-skills/academic-paper
+        name: academic-paper
+        category: writing
+        summary: Academic drafting and format-focused writing workflow.
+        necessity: optional
+        compatibility: medium
+        overlap: [core/write]
+      - id: academic-research-skills/academic-paper-reviewer
+        name: academic-paper-reviewer
+        category: review
+        summary: Multi-perspective peer review with explicit rubrics and integrity discipline.
+        necessity: high
+        compatibility: high
+        substitutes: [core/review]
+      - id: academic-research-skills/academic-pipeline
+        name: academic-pipeline
+        category: writing
+        summary: Full academic pipeline orchestrator.
+        necessity: optional
+        compatibility: low
+        overlap: [core/research, core/review, core/write]
+
+capabilities:
+  literature:
+    summary: Paper search, related work, synthesis, and cited research retrieval.
+    providers:
+      - skill: core/research
+        strength: medium
+      - skill: aris/research-lit
+        strength: strong
+      - skill: feynman/alpha-research
+        strength: strong
+      - skill: academic-research-skills/deep-research
+        strength: strong
+
+  ideation:
+    summary: Turning vague directions into tractable, researchable hypotheses and plans.
+    providers:
+      - skill: aris/research-refine
+        strength: strong
+      - skill: autoresearchclaw/hitl
+        strength: medium
+
+  planning:
+    summary: Experiment roadmap design, validation structure, and project decomposition.
+    providers:
+      - skill: aris/experiment-plan
+        strength: strong
+      - skill: nanoresearch/project-planning
+        strength: medium
+
+  execution:
+    summary: Running experiments, autoresearch loops, and compute-backed iteration.
+    providers:
+      - skill: core/experiment
+        strength: strong
+      - skill: nanoresearch/project-experiment
+        strength: very_strong
+      - skill: autoresearchclaw/execution-loops
+        strength: strong
+      - skill: ai-research-skills/autoresearch
+        strength: medium
+
+  review:
+    summary: Adversarial critique, claim checking, reproducibility audits, and result interpretation.
+    providers:
+      - skill: core/review
+        strength: strong
+      - skill: aris/result-to-claim
+        strength: strong
+      - skill: feynman/audit
+        strength: strong
+      - skill: academic-research-skills/academic-paper-reviewer
+        strength: very_strong
+      - skill: autoresearchclaw/claim-verification
+        strength: medium
+
+  writing:
+    summary: Grounded drafting, academic formatting, and paper-production support.
+    providers:
+      - skill: core/write
+        strength: strong
+      - skill: aris/paper-figure
+        strength: medium
+      - skill: academic-research-skills/academic-paper
+        strength: strong
+      - skill: academic-research-skills/academic-pipeline
+        strength: medium
+
+  rebuttal:
+    summary: Reviewer-response and revision support.
+    providers:
+      - skill: academic-research-skills/academic-paper-reviewer
+        strength: medium
+      - skill: aris/result-to-claim
+        strength: medium
+
+  monitoring:
+    summary: Session health, intervention modes, and long-loop observability.
+    providers:
+      - skill: autoresearchclaw/hitl
+        strength: strong
+      - skill: feynman/deepresearch
+        strength: medium
+
+  academic-integrity:
+    summary: Citation integrity, evidence discipline, and paper-quality safeguards.
+    providers:
+      - skill: academic-research-skills/academic-paper-reviewer
+        strength: very_strong
+      - skill: autoresearchclaw/claim-verification
+        strength: strong
+
+  infra:
+    summary: GPU/cluster execution, external tooling, and specialist ML infrastructure helpers.
+    providers:
+      - skill: nanoresearch/project-experiment
+        strength: strong
+      - skill: ai-research-skills/infra
+        strength: strong

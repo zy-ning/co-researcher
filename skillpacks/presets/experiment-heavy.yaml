@@ -1,0 +1,21 @@
+id: experiment-heavy
+summary: Adds stronger planning and experiment evidence support for users running many iterations.
+
+packs:
+  core:
+    enabled: true
+  aris:
+    enabled: true
+    selected_skills:
+      - experiment-plan
+      - result-to-claim
+      - research-refine
+  nanoresearch:
+    enabled: true
+    selected_skills:
+      - /project:experiment
+      - /project:analysis
+
+supervision:
+  mode: checkpointed
+  risk_profile: conservative

@@ -1,0 +1,24 @@
+id: literature-heavy
+summary: Strong paper search and synthesis stack with optional cited-Q&A support.
+
+packs:
+  core:
+    enabled: true
+  aris:
+    enabled: true
+    selected_skills:
+      - research-lit
+      - research-refine
+  feynman:
+    enabled: true
+    selected_skills:
+      - alpha-research
+      - audit
+  academic-research-skills:
+    enabled: true
+    selected_skills:
+      - deep-research
+
+supervision:
+  mode: checkpointed
+  risk_profile: balanced
