@@ -35,13 +35,21 @@ cd oh-my-coresearcher
 ./install.sh --global # 或全局安装 (~/.claude/skills/)
 ```
 
-### 2. ARIS 技能包（必需）
+### 2. ARIS 精简技能集（推荐）
 
-来自 [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) 的核心研究技能：
+来自 [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) 的精简研究技能：
 
 ```bash
-git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git
-cp -r Auto-claude-code-research-in-sleep/skills/* ~/.claude/skills/
+git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git /tmp/aris
+mkdir -p ~/.claude/skills
+cp -r /tmp/aris/skills/research-lit ~/.claude/skills/
+cp -r /tmp/aris/skills/research-refine ~/.claude/skills/
+cp -r /tmp/aris/skills/experiment-plan ~/.claude/skills/
+cp -r /tmp/aris/skills/result-to-claim ~/.claude/skills/
+# 可选扩展：
+# cp -r /tmp/aris/skills/arxiv ~/.claude/skills/
+# cp -r /tmp/aris/skills/paper-figure ~/.claude/skills/
+rm -rf /tmp/aris
 ```
 
 | 技能 | 调用方 | 用途 |
@@ -49,15 +57,12 @@ cp -r Auto-claude-code-research-in-sleep/skills/* ~/.claude/skills/
 | `research-lit` / `arxiv` | `research` | 文献调研 |
 | `research-refine` | `research` | 方法与想法精炼 |
 | `experiment-plan` | `research` | 实验蓝图 |
-| `run-experiment` | `research` | 远程/GPU 实验执行 |
 | `result-to-claim` | `research` | 验证结果真正支持的结论 |
-| `paper-figure` | `research` | 生成论文图表 |
-| `paper-write` | `research` | 完整 LaTeX 论文撰写 |
-| `auto-review-loop` | `research`, `review` | 多轮自动审稿 |
-| `auto-review-loop-llm` | `review` | 备用审稿者（兼容 OpenAI 接口） |
-| `auto-review-loop-minimax` | `review` | 备用审稿者（MiniMax） |
+| `paper-figure` | `research` | 可选图表生成辅助 |
 
-### 3. Codex MCP（`review` 所需）
+默认不建议一并加载：`run-experiment`、`paper-write`、`auto-review-loop`。本仓库已经内置 `experiment`、`write`、`review`，默认再装这些 ARIS 技能主要会带来职责重叠。
+
+### 3. Codex MCP（可选，推荐作为 `review` 的外部隔离审稿者）
 
 ```bash
 npm install -g @openai/codex
@@ -65,7 +70,7 @@ codex setup                               # 提示时选择 gpt-5.4 模型
 claude mcp add codex -s user -- codex mcp-server
 ```
 
-若 Codex 不可用，可使用备选方案：`auto-review-loop-llm`（任意 OpenAI 兼容端点）或 `auto-review-loop-minimax`。
+`review` 的核心要求是隔离上下文，而不一定是 Codex MCP。本地隔离子代理也可以；若需要外部边界，推荐配置 Codex MCP。额外备选方案：`auto-review-loop-llm`（任意 OpenAI 兼容端点）或 `auto-review-loop-minimax`。
 
 ### 4. Feynman 技能包（可选）
 
@@ -98,12 +103,12 @@ sudo apt install texlive-full latexmk poppler-utils
 
 | 技能包 | 可提供内容 |
 |--------|------------|
-| [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) | 核心研究流水线（上方必需依赖） |
-| [Feynman](https://github.com/getcompanion-ai/feynman) | AlphaXiv 论文问答、审计、深度研究 |
-| [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | 9 阶段流程、SLURM/GPU 编排、Feishu 通知 |
-| [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | 23 阶段流程、反幻觉注册表、自愈实验循环 |
-| [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | Orchestra Research 提供的外部学术研究技能包 |
-| [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | 面向学术研究的可复用技能工作流 |
+| [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) | 最适合作为按需引入的研究基础技能来源：文献调研、方法精炼、实验规划、结论校验 |
+| [Feynman](https://github.com/getcompanion-ai/feynman) | 最适合作为 AlphaXiv 论文问答、审计、带引用研究简报的可选扩展 |
+| [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | 可替代的端到端研究主干，强调 9 阶段流程、SLURM/GPU 编排和通知 |
+| [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | 更重型的自治研究系统，强调多阶段规划、反幻觉防护和自愈循环 |
+| [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | 面向具体 ML 任务、基础设施和评测流程的大型能力库 |
+| [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | 偏学术写作、评审和论文生产流程的专业技能包 |
 
 ## 新建项目
 

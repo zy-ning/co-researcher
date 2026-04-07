@@ -13,7 +13,7 @@ A co-researcher, **fully yours**:
 > - **Autonomous but controllable.** Customize the supervision policy: when to ask, notify, or just do. Checkpoints, resource rules, idea-change rules — all configurable.
 > - **Inferring agent.** `research` spots gaps, adjusts the todo list, and asks before acting — not a fixed pipeline.
 > - **Adversarial review.** Critic runs in an isolated context. Returns FATAL/MAJOR/MINOR issues + PROCEED/REFINE/PIVOT.
-> - **BFS mode.** Opt-in autonomous design space search: hypothesize → commit → run → keep or `git reset` → repeat.
+> - **BFS mode.** Opt-in autonomous design space search in *autoresearch* style.
 > - **Self-improving.** `evolve` proposes skill diffs from session lessons, or ingests external packs with compatibility checks. You merge.
 > - **Compatible & Composable.** Use with any LLM agent framework. Pull in external skills from anywhere. Customize your stack.
 
@@ -47,16 +47,34 @@ Alternative via skills.sh (skills only — no templates or CLAUDE.md):
 npx skills add zy-ning/co-researcher
 ```
 
-### 2. ARIS skill pack (required)
+### 2. ARIS skill subset (recommended)
 
 ```bash
-git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git
-cp -r Auto-claude-code-research-in-sleep/skills/* ~/.claude/skills/
+git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git /tmp/aris
+mkdir -p ~/.claude/skills
+cp -r /tmp/aris/skills/research-lit ~/.claude/skills/
+cp -r /tmp/aris/skills/research-refine ~/.claude/skills/
+cp -r /tmp/aris/skills/experiment-plan ~/.claude/skills/
+cp -r /tmp/aris/skills/result-to-claim ~/.claude/skills/
+# Optional extras:
+# cp -r /tmp/aris/skills/arxiv ~/.claude/skills/
+# cp -r /tmp/aris/skills/paper-figure ~/.claude/skills/
+rm -rf /tmp/aris
 ```
 
-Provides: `research-lit`, `arxiv`, `research-refine`, `experiment-plan`, `run-experiment`, `result-to-claim`, `paper-figure`, `paper-write`, `auto-review-loop`, `auto-review-loop-llm`, `auto-review-loop-minimax`.
+These are the ARIS skills this pack benefits from most:
+- `research-lit` for literature survey
+- `research-refine` for method and idea refinement
+- `experiment-plan` for experiment blueprints
+- `result-to-claim` for checking which conclusions the results actually support
 
-### 3. Codex MCP (required for `review`)
+Optional ARIS add-ons:
+- `arxiv` if you want a second literature lookup surface
+- `paper-figure` if you want ARIS figure-generation helpers
+
+Skip by default: `run-experiment`, `paper-write`, and `auto-review-loop`. This pack already ships `experiment`, `write`, and `review`, so loading those ARIS replacements by default adds overlap more than value.
+
+### 3. Codex MCP (optional, recommended external critic for `review`)
 
 ```bash
 npm install -g @openai/codex
@@ -64,7 +82,7 @@ codex setup                          # set model to gpt-5.4 when prompted
 claude mcp add codex -s user -- codex mcp-server
 ```
 
-Fallback: `auto-review-loop-llm` (set `LLM_API_BASE` + `LLM_API_KEY`) or `auto-review-loop-minimax` (set `MINIMAX_API_KEY`).
+`review` prefers any isolated critic context. Use Codex MCP when you want an external boundary in Claude Code. Otherwise an isolated subagent can work too. Additional fallbacks: `auto-review-loop-llm` (set `LLM_API_BASE` + `LLM_API_KEY`) or `auto-review-loop-minimax` (set `MINIMAX_API_KEY`).
 
 ### 4. Feynman skill pack (optional)
 
@@ -88,12 +106,13 @@ Use `evolve` (personalize mode) to selectively pull skills from any of these:
 
 | Pack | What it adds |
 |------|-------------|
-| [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) | Core research pipeline (required above) |
+| [ARIS](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep) | Best source of research primitives to import selectively: lit survey, refinement, experiment planning, claim checking |
 | [Feynman](https://github.com/getcompanion-ai/feynman) | AlphaXiv paper Q&A, audit, deep research |
-| [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | 9-stage pipeline, SLURM/GPU orchestration, Feishu notifications |
-| [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | 23-stage pipeline, anti-fabrication registry, self-healing experiment loop |
-| [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | External academic research skill pack from Orchestra Research |
-| [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | Academic research-oriented skill pack with reusable workflows |
+| [Feynman](https://github.com/getcompanion-ai/feynman) | Best optional add-on for AlphaXiv paper Q&A, audit, and cited research briefs |
+| [NanoResearch](https://github.com/OpenRaiser/NanoResearch) | Alternative end-to-end backbone with 9 stages, SLURM/GPU orchestration, and notifications |
+| [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | Heavyweight autonomous research system with multi-stage planning, guardrails, and self-healing loops |
+| [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | Large capability library for specific ML tasks, infrastructure, and evaluation workflows |
+| [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | Specialist pack for academic writing, review, and paper-production workflows |
 
 ## Start a new project
 

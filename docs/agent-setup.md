@@ -16,19 +16,28 @@ Verify: `ls ~/.claude/skills/research/SKILL.md` exists.
 
 ---
 
-## Step 2 — ARIS skill pack (required)
+## Step 2 — ARIS skill subset (recommended)
 
 ```bash
 git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git /tmp/aris
-cp -r /tmp/aris/skills/* ~/.claude/skills/
+mkdir -p ~/.claude/skills
+cp -r /tmp/aris/skills/research-lit ~/.claude/skills/
+cp -r /tmp/aris/skills/research-refine ~/.claude/skills/
+cp -r /tmp/aris/skills/experiment-plan ~/.claude/skills/
+cp -r /tmp/aris/skills/result-to-claim ~/.claude/skills/
+# Optional extras:
+# cp -r /tmp/aris/skills/arxiv ~/.claude/skills/
+# cp -r /tmp/aris/skills/paper-figure ~/.claude/skills/
 rm -rf /tmp/aris
 ```
 
-Verify: `ls ~/.claude/skills/research-lit/` and `~/.claude/skills/auto-review-loop/` both exist.
+These four skills cover the main gaps this pack delegates outward: literature survey, method refinement, experiment planning, and result-to-claim validation.
+
+Verify: `ls ~/.claude/skills/research-lit/ ~/.claude/skills/research-refine/ ~/.claude/skills/experiment-plan/ ~/.claude/skills/result-to-claim/`
 
 ---
 
-## Step 3 — Codex MCP (required for `review`)
+## Step 3 — Codex MCP (optional, recommended external critic for `review`)
 
 ```bash
 npm install -g @openai/codex
@@ -39,7 +48,7 @@ For model selection: run `codex setup` and set model to `gpt-5.4` when prompted.
 
 Verify: `claude mcp list` shows `codex`.
 
-If Codex is unavailable, `review` falls back to `auto-review-loop-llm` (set `LLM_API_BASE` and `LLM_API_KEY` env vars) or `auto-review-loop-minimax` (set `MINIMAX_API_KEY`).
+`review` only requires an isolated critic context. Use Codex MCP when you want an external boundary in Claude Code. If Codex is unavailable, an isolated subagent is still valid, and additional fallbacks are `auto-review-loop-llm` (set `LLM_API_BASE` and `LLM_API_KEY` env vars) or `auto-review-loop-minimax` (set `MINIMAX_API_KEY`).
 
 ---
 
@@ -95,7 +104,7 @@ Then invoke the `research` skill to begin.
 | Component | Check |
 |-----------|-------|
 | Core skills | `ls ~/.claude/skills/research/SKILL.md` |
-| ARIS skills | `ls ~/.claude/skills/research-lit/ ~/.claude/skills/auto-review-loop/` |
+| ARIS skills | `ls ~/.claude/skills/research-lit/ ~/.claude/skills/research-refine/ ~/.claude/skills/experiment-plan/ ~/.claude/skills/result-to-claim/` |
 | Codex MCP | `claude mcp list \| grep codex` |
 | Feynman (optional) | `ls ~/.claude/skills/alpha-research/` |
 | Templates | `ls ~/.claude/co-researcher/templates/RESEARCH.md.template` |
