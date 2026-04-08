@@ -1,6 +1,12 @@
 ---
 name: write
-description: Drafts or revises a research paper from RESEARCH.md, producing paper.md and refs.bib. Marks ungrounded claims [UNGROUNDED] and unverified citations [UNVERIFIED] inline. Fixed sequence: outline → section drafts → self-consistency check → citation pass → auto-review. Respects RESEARCH.md supervision policy at major gates. Trigger phrases: "write paper", "draft paper", "revise paper", "start writing".
+description: >-
+  Drafts or revises a research paper from RESEARCH.md, producing paper.md and
+  refs.bib. Marks ungrounded claims [UNGROUNDED] and unverified citations
+  [UNVERIFIED] inline. Fixed sequence: outline → section drafts →
+  self-consistency check → citation pass → auto-review. Respects RESEARCH.md
+  supervision policy at major gates. Trigger phrases: "write paper", "draft
+  paper", "revise paper", "start writing".
 ---
 
 # Write

@@ -1,6 +1,14 @@
 ---
 name: research
-description: Autonomous research agent that reads RESEARCH.md, infers what's needed, dynamically adjusts TODOs, and delegates to the right skill. Supports opt-in BFS mode for autonomous design space search. Respects a configurable supervision policy (presets: manual / checkpointed / autonomous / wild) governing notifications, approval gates, resource limits, and idea-change handling. Proactively surfaces gaps and asks before acting. Trigger phrases: "start research", "continue project", "what's next?", "explore design space", "autoresearch".
+description: >-
+  Autonomous research agent that reads RESEARCH.md, infers what's needed,
+  dynamically adjusts TODOs, and delegates to the right skill. Supports opt-in
+  BFS mode for autonomous design space search. Respects a configurable
+  supervision policy (presets: manual / checkpointed / autonomous / wild)
+  governing notifications, approval gates, resource limits, and idea-change
+  handling. Proactively surfaces gaps and asks before acting. Trigger phrases:
+  "start research", "continue project", "what's next?", "explore design
+  space", "autoresearch".
 ---
 
 # Research
