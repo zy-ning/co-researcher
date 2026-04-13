@@ -18,6 +18,14 @@ packs:
     enabled: true
     selected_skills:
       - deep-research
+  read-arxiv-paper:
+    enabled: true
+    selected_skills:
+      - read-arxiv-paper
+  openalex-database:
+    enabled: true
+    selected_skills:
+      - openalex-database
 
 supervision:
   mode: checkpointed

@@ -368,6 +368,74 @@ packs:
         compatibility: low
         overlap: [core/research, core/review, core/write]
 
+  - id: read-arxiv-paper
+    name: read-arxiv-paper
+    source_type: external
+    repo: https://github.com/chrisjmccormick/modded-nanochat
+    summary: Single-skill helper for downloading, reading, and summarizing arXiv papers.
+    categories: [literature]
+    maturity: medium
+    maintenance: active
+    recommended_role: overlay
+    install_mode: single-skill
+    install:
+      command: npx skillfish add chrisjmccormick/modded-nanochat read-arxiv-paper
+    compatibility:
+      with_core: high
+      dependency_burden: low
+      autonomy_bias: balanced
+      notes:
+        - Treat as a single skill import from the modded-nanochat source, not as a whole-pack install.
+    necessity:
+      level: recommended
+      rationale:
+        - Adds a focused arXiv paper reading workflow to literature-heavy stacks.
+        - Complements broader literature search skills with direct paper digestion.
+    recommended_subset: [read-arxiv-paper]
+    overlap_with_core: [research]
+    skills:
+      - id: read-arxiv-paper/read-arxiv-paper
+        name: read-arxiv-paper
+        category: literature
+        summary: Reads and summarizes arXiv papers from arXiv URLs or identifiers.
+        necessity: medium
+        compatibility: high
+        substitutes: [aris/arxiv]
+
+  - id: openalex-database
+    name: openalex-database
+    source_type: external
+    repo: https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/openalex-database
+    summary: Single-skill OpenAlex database helper for scholarly metadata lookup and research graph exploration.
+    categories: [literature]
+    maturity: medium
+    maintenance: active
+    recommended_role: overlay
+    install_mode: single-skill
+    install:
+      command: npx @smithery/cli@latest skill add K-Dense-AI/openalex-database
+    compatibility:
+      with_core: high
+      dependency_burden: medium
+      autonomy_bias: balanced
+      notes:
+        - Installed through Smithery as a single skill slug.
+        - Useful when literature workflows need OpenAlex-backed paper and author metadata.
+    necessity:
+      level: recommended
+      rationale:
+        - Adds structured scholarly database access for research-heavy literature work.
+        - Complements citation and related-work discovery workflows.
+    recommended_subset: [openalex-database]
+    overlap_with_core: [research]
+    skills:
+      - id: openalex-database/openalex-database
+        name: openalex-database
+        category: literature
+        summary: Queries OpenAlex scholarly metadata for papers, authors, venues, and related works.
+        necessity: medium
+        compatibility: high
+
 capabilities:
   literature:
     summary: Paper search, related work, synthesis, and cited research retrieval.
@@ -379,6 +447,10 @@ capabilities:
       - skill: feynman/alpha-research
         strength: strong
       - skill: academic-research-skills/deep-research
+        strength: strong
+      - skill: read-arxiv-paper/read-arxiv-paper
+        strength: medium
+      - skill: openalex-database/openalex-database
         strength: strong
 
   ideation:
