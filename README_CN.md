@@ -88,6 +88,8 @@ Install and configure "Oh_My_Co-Researcher" skill pack following the instruction
 | [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | 更重型的自治研究系统，强调多阶段规划和自愈循环 |
 | [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | 面向具体 ML 任务、基础设施和评测流程的大型能力库 |
 | [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | 偏学术写作、评审和论文生产流程的专业技能包 |
+| [scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills) | 大型科学技能库，覆盖领域科学、数据库查询、统计分析与科研表达 |
+| [claude-tricks](https://github.com/christyjacob4/claude-tricks) | 面向 Claude Code 的调试、调查、代码解释、引导学习和交互式幻灯片增强包 |
 
 ---
 

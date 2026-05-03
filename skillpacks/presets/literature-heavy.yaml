@@ -26,6 +26,15 @@ packs:
     enabled: true
     selected_skills:
       - openalex-database
+  scientific-agent-skills:
+    enabled: true
+    selected_skills:
+      - paper-lookup
+      - literature-review
+      - scientific-critical-thinking
+      - citation-management
+      - scholar-evaluation
+      - venue-templates
 
 supervision:
   mode: checkpointed

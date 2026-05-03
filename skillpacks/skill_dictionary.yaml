@@ -201,7 +201,7 @@ packs:
       rationale:
         - Valuable for experiment-heavy users with compute infrastructure.
         - Too heavyweight to recommend as a default donor pack.
-    recommended_subset: [project:planning, project:experiment, project:analysis]
+    recommended_subset: ["project:planning", "project:experiment", "project:analysis"]
     overlap_with_core: [research, experiment, review, write]
     skills:
       - id: nanoresearch/project-planning
@@ -436,6 +436,185 @@ packs:
         necessity: medium
         compatibility: high
 
+  - id: scientific-agent-skills
+    name: scientific-agent-skills
+    source_type: external
+    repo: https://github.com/K-Dense-AI/scientific-agent-skills
+    summary: Large Agent Skills-standard library for domain science, scientific data analysis, literature workflows, and research communication.
+    categories: [literature, review, writing, data-analysis, infra, domain-science]
+    maturity: high
+    maintenance: active
+    recommended_role: niche
+    install_mode: subset
+    compatibility:
+      with_core: medium
+      dependency_burden: high
+      autonomy_bias: balanced
+      notes:
+        - Very broad 135-skill collection; use targeted subsets instead of bulk installs.
+        - Strongest fit is domain-science and scientific-data workflows that the core pack intentionally does not cover.
+        - Some skills have per-skill licenses, API keys, Python 3.13+/uv assumptions, or K-Dense platform tie-ins.
+    necessity:
+      level: optional
+      rationale:
+        - Adds scientific database lookup, statistical analysis, EDA, and evidence-quality helpers not covered by the core.
+        - Too broad and dependency-heavy to recommend as a default pack.
+    recommended_subset: [paper-lookup, literature-review, scientific-critical-thinking, citation-management, scholar-evaluation, venue-templates, statistical-analysis, exploratory-data-analysis, database-lookup]
+    overlap_with_core: [research, review, write, experiment]
+    skills:
+      - id: scientific-agent-skills/paper-lookup
+        name: paper-lookup
+        category: literature
+        summary: Multi-database paper lookup across PubMed, PMC, bioRxiv, medRxiv, arXiv, OpenAlex, Crossref, Semantic Scholar, CORE, and Unpaywall.
+        necessity: medium
+        compatibility: medium
+        overlap: [core/research]
+        substitutes: [aris/research-lit, read-arxiv-paper/read-arxiv-paper, openalex-database/openalex-database]
+      - id: scientific-agent-skills/literature-review
+        name: literature-review
+        category: literature
+        summary: Systematic scientific literature review workflow with stronger methodology discipline.
+        necessity: medium
+        compatibility: medium
+        overlap: [core/research]
+        substitutes: [aris/research-lit]
+      - id: scientific-agent-skills/scientific-critical-thinking
+        name: scientific-critical-thinking
+        category: review
+        summary: Evidence-quality and reasoning critique for scientific claims.
+        necessity: medium
+        compatibility: high
+        overlap: [core/review]
+      - id: scientific-agent-skills/citation-management
+        name: citation-management
+        category: academic-integrity
+        summary: Citation organization and integrity support for scientific writing.
+        necessity: medium
+        compatibility: high
+      - id: scientific-agent-skills/scholar-evaluation
+        name: scholar-evaluation
+        category: review
+        summary: Structured scholarly evaluation and scoring framework.
+        necessity: optional
+        compatibility: medium
+      - id: scientific-agent-skills/venue-templates
+        name: venue-templates
+        category: writing
+        summary: Venue-aware templates and formatting support for research submissions.
+        necessity: optional
+        compatibility: high
+      - id: scientific-agent-skills/statistical-analysis
+        name: statistical-analysis
+        category: data-analysis
+        summary: Guided statistical test selection and analysis for scientific datasets.
+        necessity: medium
+        compatibility: high
+      - id: scientific-agent-skills/exploratory-data-analysis
+        name: exploratory-data-analysis
+        category: data-analysis
+        summary: Exploratory analysis workflow for many scientific data formats.
+        necessity: medium
+        compatibility: medium
+      - id: scientific-agent-skills/database-lookup
+        name: database-lookup
+        category: literature
+        summary: Unified lookup across dozens of scientific databases.
+        necessity: medium
+        compatibility: medium
+      - id: scientific-agent-skills/domain-science
+        name: domain-science skills
+        category: domain-science
+        summary: Large set of bioinformatics, cheminformatics, clinical, materials, physics, lab automation, and domain-specific analysis skills.
+        necessity: optional
+        compatibility: medium
+        requirements: [domain-specific Python packages]
+
+  - id: claude-tricks
+    name: claude-tricks
+    source_type: external
+    repo: https://github.com/christyjacob4/claude-tricks
+    summary: Small Claude Code plugin with skills for debugging, investigation, code explanation, guided learning, UI work, PDFs, and HTML slide decks.
+    categories: [debugging, code-understanding, learning, writing, presentation, frontend]
+    maturity: low
+    maintenance: active
+    recommended_role: overlay
+    install_mode: subset
+    compatibility:
+      with_core: medium
+      dependency_burden: low
+      autonomy_bias: balanced
+      notes:
+        - Most valuable as a developer quality-of-life overlay around co-researcher, not as a research workflow replacement.
+        - Skip auto-research by default because it overlaps strongly with the core experiment BFS mode.
+        - The pdf skill carries separate proprietary licensing and should be reviewed before import.
+    necessity:
+      level: optional
+      rationale:
+        - Adds practical debugging, investigation, code explanation, and presentation workflows missing from the research core.
+        - Young repo, so use targeted imports after review rather than broad activation.
+    recommended_subset: [investigate, debug, code-explainer, guided-learning, slide-deck]
+    overlap_with_core: [experiment, research, write]
+    skills:
+      - id: claude-tricks/investigate
+        name: investigate
+        category: debugging
+        summary: Deep bug and performance investigation with parallel evidence collection.
+        necessity: medium
+        compatibility: high
+      - id: claude-tricks/debug
+        name: debug
+        category: debugging
+        summary: Systematic debugging workflow for failing tests, builds, and runtime errors.
+        necessity: medium
+        compatibility: high
+      - id: claude-tricks/code-explainer
+        name: code-explainer
+        category: code-understanding
+        summary: Codebase explanation, architecture diagrams, and flow tracing.
+        necessity: optional
+        compatibility: high
+      - id: claude-tricks/guided-learning
+        name: guided-learning
+        category: learning
+        summary: Adaptive Socratic tutoring and prerequisite tracing.
+        necessity: optional
+        compatibility: high
+      - id: claude-tricks/slide-deck
+        name: slide-deck
+        category: presentation
+        summary: Interactive HTML slide deck generation with charts and animations.
+        necessity: optional
+        compatibility: medium
+        overlap: [core/write]
+      - id: claude-tricks/alphaxiv-paper-lookup
+        name: alphaxiv-paper-lookup
+        category: literature
+        summary: AlphaXiv-backed structured overviews of arXiv papers.
+        necessity: optional
+        compatibility: medium
+        requirements: [alphaxiv.org availability]
+        substitutes: [read-arxiv-paper/read-arxiv-paper]
+      - id: claude-tricks/auto-research
+        name: auto-research
+        category: execution
+        summary: Autonomous experiment loop inspired by autoresearch.
+        necessity: optional
+        compatibility: low
+        overlap: [core/experiment]
+      - id: claude-tricks/frontend-design
+        name: frontend-design
+        category: frontend
+        summary: Production-grade frontend UI creation skill.
+        necessity: optional
+        compatibility: medium
+      - id: claude-tricks/pdf
+        name: pdf
+        category: writing
+        summary: PDF extraction, forms, merge, and OCR helper.
+        necessity: optional
+        compatibility: medium
+        requirements: [license review]
+
 capabilities:
   literature:
     summary: Paper search, related work, synthesis, and cited research retrieval.
@@ -452,6 +631,14 @@ capabilities:
         strength: medium
       - skill: openalex-database/openalex-database
         strength: strong
+      - skill: scientific-agent-skills/paper-lookup
+        strength: strong
+      - skill: scientific-agent-skills/literature-review
+        strength: strong
+      - skill: scientific-agent-skills/database-lookup
+        strength: strong
+      - skill: claude-tricks/alphaxiv-paper-lookup
+        strength: medium
 
   ideation:
     summary: Turning vague directions into tractable, researchable hypotheses and plans.
@@ -459,6 +646,8 @@ capabilities:
       - skill: aris/research-refine
         strength: strong
       - skill: autoresearchclaw/hitl
+        strength: medium
+      - skill: scientific-agent-skills/scientific-critical-thinking
         strength: medium
 
   planning:
@@ -480,6 +669,8 @@ capabilities:
         strength: strong
       - skill: ai-research-skills/autoresearch
         strength: medium
+      - skill: claude-tricks/auto-research
+        strength: medium
 
   review:
     summary: Adversarial critique, claim checking, reproducibility audits, and result interpretation.
@@ -494,6 +685,14 @@ capabilities:
         strength: very_strong
       - skill: autoresearchclaw/claim-verification
         strength: medium
+      - skill: scientific-agent-skills/scientific-critical-thinking
+        strength: strong
+      - skill: scientific-agent-skills/scholar-evaluation
+        strength: medium
+      - skill: claude-tricks/debug
+        strength: medium
+      - skill: claude-tricks/investigate
+        strength: strong
 
   writing:
     summary: Grounded drafting, academic formatting, and paper-production support.
@@ -505,6 +704,10 @@ capabilities:
       - skill: academic-research-skills/academic-paper
         strength: strong
       - skill: academic-research-skills/academic-pipeline
+        strength: medium
+      - skill: scientific-agent-skills/venue-templates
+        strength: medium
+      - skill: claude-tricks/pdf
         strength: medium
 
   rebuttal:
@@ -530,6 +733,10 @@ capabilities:
         strength: very_strong
       - skill: autoresearchclaw/claim-verification
         strength: strong
+      - skill: scientific-agent-skills/citation-management
+        strength: strong
+      - skill: scientific-agent-skills/scientific-critical-thinking
+        strength: strong
 
   infra:
     summary: GPU/cluster execution, external tooling, and specialist ML infrastructure helpers.
@@ -538,3 +745,41 @@ capabilities:
         strength: strong
       - skill: ai-research-skills/infra
         strength: strong
+      - skill: scientific-agent-skills/database-lookup
+        strength: medium
+
+  data-analysis:
+    summary: Statistical analysis, exploratory data analysis, and scientific dataset interpretation.
+    providers:
+      - skill: scientific-agent-skills/statistical-analysis
+        strength: strong
+      - skill: scientific-agent-skills/exploratory-data-analysis
+        strength: strong
+
+  debugging:
+    summary: Systematic bug, test, build, and performance investigation workflows.
+    providers:
+      - skill: claude-tricks/investigate
+        strength: strong
+      - skill: claude-tricks/debug
+        strength: strong
+
+  code-understanding:
+    summary: Codebase explanation, architecture mapping, and execution-flow tracing.
+    providers:
+      - skill: claude-tricks/code-explainer
+        strength: strong
+
+  learning:
+    summary: Adaptive tutoring and guided concept acquisition.
+    providers:
+      - skill: claude-tricks/guided-learning
+        strength: strong
+
+  presentation:
+    summary: Slide decks, posters, and presentation-oriented research communication.
+    providers:
+      - skill: claude-tricks/slide-deck
+        strength: medium
+      - skill: scientific-agent-skills/venue-templates
+        strength: medium

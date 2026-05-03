@@ -88,6 +88,8 @@ Use `evolve` (personalize mode) to selectively pull skills from any of these:
 | [AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw) | Heavyweight autonomous research system with multi-stage planning and self-healing loops |
 | [AI-Research-SKILLs](https://github.com/Orchestra-Research/AI-Research-SKILLs) | Large capability library for specific ML tasks, infrastructure, and evaluation workflows |
 | [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) | Specialist pack for academic writing, review, and paper-production workflows |
+| [scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills) | Large scientific skills library for domain science, database lookup, statistical analysis, and research communication |
+| [claude-tricks](https://github.com/christyjacob4/claude-tricks) | Claude Code overlay for debugging, investigation, code explanation, guided learning, and interactive slides |
 
 ---
 

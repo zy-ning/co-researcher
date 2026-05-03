@@ -15,6 +15,11 @@ packs:
     selected_skills:
       - /project:experiment
       - /project:analysis
+  claude-tricks:
+    enabled: true
+    selected_skills:
+      - investigate
+      - debug
 
 supervision:
   mode: checkpointed
